@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit 5 Exam — Communication</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:#0f2044;--oxford:#001a3a;--gold:#c8963e;--gold-light:#fef3dc;
+  --cream:#f8f6f1;--white:#fff;--gray:#6b7280;--light-gray:#e8e4dc;
+  --text:#1a1a2e;--border:#d4cfc4;
+  --green:#16a34a;--green-bg:#dcfce7;
+  --red:#dc2626;--red-bg:#fee2e2;
+  --blue-bg:#eff6ff;--amber:#d97706;--amber-bg:#fffbeb;
+  --purple:#7c3aed;--purple-bg:#f5f3ff;--purple-border:#c4b5fd;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);font-size:14px;line-height:1.7;min-height:100vh}
+.sticky-bar{position:fixed;top:0;left:0;right:0;z-index:100;background:var(--oxford);padding:0 24px;height:52px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 16px rgba(0,0,0,.3)}
+.sticky-title{font-size:13px;font-weight:600;color:rgba(255,255,255,.7)}
+.sticky-title span{color:var(--gold)}
+.sticky-right{display:flex;align-items:center;gap:12px}
+.progress-track{width:130px;height:5px;background:rgba(255,255,255,.15);border-radius:3px;overflow:hidden}
+.progress-fill{height:5px;background:var(--gold);border-radius:3px;transition:width .4s ease}
+.progress-label{font-size:12px;color:rgba(255,255,255,.55)}
+.timer{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:6px;padding:4px 12px;font-size:13px;font-weight:600;color:white;font-variant-numeric:tabular-nums}
+.timer.warn{background:rgba(220,38,38,.3);border-color:rgba(220,38,38,.5);color:#fca5a5}
+.main{max-width:740px;margin:0 auto;padding:72px 18px 60px}
+.exam-header{background:var(--navy);border-radius:16px;overflow:hidden;margin-bottom:22px;box-shadow:0 8px 28px rgba(15,32,68,.22)}
+.header-stripe{background:var(--gold);height:5px}
+.header-body{padding:26px 30px;display:flex;justify-content:space-between;align-items:flex-start;gap:18px}
+.unit-tag{font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-bottom:5px}
+.exam-title{font-family:'Playfair Display',serif;font-size:30px;font-weight:700;color:white;line-height:1.1}
+.exam-sub{font-size:12.5px;color:rgba(255,255,255,.45);margin-top:5px}
+.header-pills{display:flex;flex-direction:column;gap:5px;align-items:flex-end;flex-shrink:0}
+.pill{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);border-radius:7px;padding:5px 13px;font-size:12px;color:rgba(255,255,255,.65);white-space:nowrap}
+.pill strong{color:white}
+.info-card{background:white;border-radius:12px;border:1px solid var(--border);padding:20px 22px;margin-bottom:18px;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.info-card h3{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gray);margin-bottom:14px}
+.info-grid{display:grid;grid-template-columns:2fr 1fr;gap:14px}
+.field label{display:block;font-size:11px;font-weight:600;color:var(--gray);letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px}
+.req-star{color:#ef4444}
+.field input{width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--text);background:var(--cream);transition:border-color .2s;outline:none}
+.field input:focus{border-color:var(--navy);background:white}
+.field input.err{border-color:#ef4444;background:#fef2f2}
+.err-msg{font-size:11px;color:#ef4444;margin-top:4px;display:none}
+.err-msg.show{display:block}
+.instr{background:var(--blue-bg);border:1px solid #bfdbfe;border-radius:10px;padding:12px 16px;margin-bottom:20px;font-size:13px;color:#1e3a6e;display:flex;gap:10px}
+.instr .ico{font-size:17px;flex-shrink:0;margin-top:1px}
+.section{background:white;border-radius:14px;border:1px solid var(--border);overflow:hidden;margin-bottom:18px;box-shadow:0 2px 10px rgba(0,0,0,.05)}
+.sec-head{background:var(--navy);padding:13px 20px;display:flex;align-items:center;gap:13px}
+.sec-badge{width:34px;height:34px;border-radius:50%;background:var(--gold);color:var(--oxford);font-family:'Playfair Display',serif;font-size:16px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sec-info{flex:1}
+.sec-type{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:1px}
+.sec-title{font-family:'Playfair Display',serif;font-size:15px;color:white}
+.sec-pts{font-size:11px;color:rgba(255,255,255,.4);text-align:right}
+.sec-pts strong{color:var(--gold);font-size:15px;display:block}
+.sec-body{padding:18px 20px}
+.q{margin-bottom:18px;padding-bottom:18px;border-bottom:1px solid var(--light-gray)}
+.q:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none}
+.q-row{display:flex;gap:11px;align-items:flex-start;margin-bottom:10px}
+.q-num{width:23px;height:23px;border-radius:50%;background:var(--gold-light);color:var(--oxford);font-weight:700;font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.q-text{font-size:14px;color:var(--text);line-height:1.65;flex:1}
+.q-text em{color:var(--gray);font-size:12.5px}
+.mc{display:flex;flex-direction:column;gap:6px;padding-left:34px}
+.mc-opt{display:flex;align-items:center;gap:9px;padding:8px 13px;border:1.5px solid var(--border);border-radius:9px;cursor:pointer;transition:all .15s;font-size:13.5px;background:var(--cream);user-select:none}
+.mc-opt:hover{border-color:var(--navy);background:white}
+.mc-opt.sel{border-color:var(--navy);background:#f0f4ff}
+.radio{width:16px;height:16px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;position:relative;transition:all .15s}
+.mc-opt.sel .radio{border-color:var(--navy);background:var(--navy)}
+.mc-opt.sel .radio::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:5px;height:5px;border-radius:50%;background:white}
+.tf{display:flex;gap:10px;padding-left:34px}
+.tf-opt{display:flex;align-items:center;gap:8px;padding:8px 22px;border:1.5px solid var(--border);border-radius:9px;cursor:pointer;transition:all .15s;font-size:13.5px;font-weight:600;background:var(--cream);user-select:none}
+.tf-opt:hover{border-color:var(--navy);background:white}
+.tf-opt.sel-t{border-color:var(--green);background:var(--green-bg);color:var(--green)}
+.tf-opt.sel-f{border-color:var(--red);background:var(--red-bg);color:var(--red)}
+.tf-box{width:16px;height:16px;border-radius:4px;border:2px solid var(--border);flex-shrink:0}
+.tf-opt.sel-t .tf-box{border-color:var(--green);background:var(--green)}
+.tf-opt.sel-f .tf-box{border-color:var(--red);background:var(--red)}
+.fill-wrap{padding-left:34px}
+.fill-input{width:100%;max-width:240px;padding:8px 13px;border:1.5px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--text);background:var(--cream);outline:none;transition:border-color .2s}
+.fill-input:focus{border-color:var(--navy);background:white}
+.fill-hint{font-size:11px;color:var(--gray);margin-top:5px;font-style:italic}
+.drop-wrap{padding-left:34px}
+.drop-select{width:100%;max-width:400px;padding:9px 13px;border:1.5px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13.5px;color:var(--text);background:var(--cream);outline:none;cursor:pointer;transition:border-color .2s}
+.drop-select:focus{border-color:var(--navy);background:white}
+.match-wrap{padding-left:34px}
+.match-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.match-left{background:var(--purple-bg);border:1px solid var(--purple-border);border-radius:8px;padding:7px 12px;font-size:13px;color:var(--purple);font-weight:500;min-width:140px;flex-shrink:0}
+.match-select{flex:1;max-width:340px;padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--text);background:var(--cream);outline:none;cursor:pointer;transition:border-color .2s}
+.match-select:focus{border-color:var(--navy);background:white}
+.open-wrap{padding-left:34px}
+.open-textarea{width:100%;min-height:105px;padding:10px 13px;border:1.5px solid var(--border);border-radius:9px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--text);background:var(--cream);resize:vertical;line-height:1.7;outline:none;transition:border-color .2s}
+.open-textarea:focus{border-color:var(--navy);background:white}
+.word-count{font-size:11px;color:var(--gray);margin-top:5px}
+.ctx{background:var(--amber-bg);border:1px solid #fde68a;border-radius:8px;padding:11px 15px;font-size:12.5px;color:#78350f;margin-bottom:14px;line-height:1.8}
+.ctx-lbl{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);display:block;margin-bottom:4px}
+.submit-zone{background:white;border:1px solid var(--border);border-radius:14px;padding:26px 24px;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,.05)}
+.submit-zone p{font-size:13px;color:var(--gray);margin-bottom:16px;line-height:1.6}
+.submit-btn{background:var(--navy);color:white;border:none;padding:13px 44px;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:9px}
+.submit-btn:hover{background:var(--oxford);transform:translateY(-1px);box-shadow:0 6px 18px rgba(15,32,68,.28)}
+.submit-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
+.success{display:none;text-align:center;padding:56px 28px;background:white;border-radius:16px;border:1px solid var(--border);box-shadow:0 8px 28px rgba(0,0,0,.08)}
+.success-icon{font-size:58px;margin-bottom:18px}
+.success h2{font-family:'Playfair Display',serif;font-size:26px;color:var(--navy);margin-bottom:8px}
+.success p{font-size:13.5px;color:var(--gray);max-width:380px;margin:0 auto;line-height:1.8}
+@media(max-width:560px){.info-grid{grid-template-columns:1fr}.header-body{flex-direction:column}.mc,.tf,.fill-wrap,.drop-wrap,.match-wrap,.open-wrap{padding-left:0}.match-left{min-width:100px;font-size:12px}.progress-track{width:80px}}
+</style>
+</head>
+<body>
+<div class="sticky-bar">
+  <div class="sticky-title">Unit 5 · <span>Communication Exam</span></div>
+  <div class="sticky-right">
+    <div class="progress-track"><div class="progress-fill" id="pFill"></div></div>
+    <div class="progress-label" id="pLabel">0 / 25</div>
+    <div class="timer" id="timer">45:00</div>
+  </div>
+</div>
+<div class="main" id="examMain">
+  <div class="exam-header">
+    <div class="header-stripe"></div>
+    <div class="header-body">
+      <div>
+        <div class="unit-tag">Oxford Business Result · Elementary · Unit 5</div>
+        <div class="exam-title">Communication</div>
+        <div class="exam-sub">Documents &amp; verbs · Past simple · Apologizing · Solving problems</div>
+      </div>
+      <div class="header-pills">
+        <div class="pill"><strong>25</strong> Questions</div>
+        <div class="pill"><strong>50</strong> Points</div>
+        <div class="pill"><strong>45</strong> Min</div>
+      </div>
+    </div>
+  </div>
+  <div class="info-card">
+    <h3>Your Information</h3>
+    <div class="info-grid">
+      <div class="field">
+        <label>Full Name <span class="req-star">*</span></label>
+        <input type="text" id="sName" placeholder="Enter your full name" oninput="clearErr('sName','nameErr');updateProgress()">
+        <div class="err-msg" id="nameErr">⚠ Please enter your full name.</div>
+      </div>
+      <div class="field">
+        <label>Class / Group <span class="req-star">*</span></label>
+        <input type="text" id="sClass" placeholder="e.g. A1-B" oninput="clearErr('sClass','classErr');updateProgress()">
+        <div class="err-msg" id="classErr">⚠ Please enter your class.</div>
+      </div>
+    </div>
+  </div>
+  <div class="instr"><div class="ico">📋</div><div>Answer all questions using buttons, dropdowns, and text fields. Only questions 24 and 25 require a longer written answer. Click <strong>Submit Exam</strong> when finished — your teacher receives your answers immediately.</div></div>
+
+  <!-- SECTION A: MATCHING + MC — Documents & Verbs -->
+  <div class="section">
+    <div class="sec-head"><div class="sec-badge">A</div><div class="sec-info"><div class="sec-type">Matching &amp; Multiple Choice</div><div class="sec-title">Working with Words — Documents &amp; Verbs</div></div><div class="sec-pts"><strong>12</strong>pts · 2 each</div></div>
+    <div class="sec-body">
+      <div class="ctx"><span class="ctx-lbl">📌 Q1–Q3: Match each document to its correct description</span></div>
+      <div class="q">
+        <div class="q-row"><div class="q-num">1</div><div class="q-text">invoice →</div></div>
+        <div class="match-wrap"><select class="match-select" id="q1" onchange="updateProgress()"><option value="">— Select description —</option><option>a list of items ordered and total price sent to a customer</option><option>a document with your work history sent to employers</option><option>a card with your name and contact details</option><option>a document you sign when starting a job or agreement</option><option>a note confirming a payment was received</option><option>a document you fill in to apply for a job</option></select></div>
+      </div>
+      <div class="q">
+        <div class="q-row"><div class="q-num">2</div><div class="q-text">CV →</div></div>
+        <div class="match-wrap"><select class="match-select" id="q2" onchange="updateProgress()"><option value="">— Select description —</option><option>a list of items ordered and total price sent to a customer</option><option>a document with your work history sent to employers</option><option>a card with your name and contact details</option><option>a document you sign when starting a job or agreement</option><option>a note confirming a payment was received</option><option>a document you fill in to apply for a job</option></select></div>
+      </div>
+      <div class="q">
+        <div class="q-row"><div class="q-num">3</div><div class="q-text">business card →</div></div>
+        <div class="match-wrap"><select class="match-select" id="q3" onchange="updateProgress()"><option value="">— Select description —</option><option>a list of items ordered and total price sent to a customer</option><option>a document with your work history sent to employers</option><option>a card with your name and contact details</option><option>a document you sign when starting a job or agreement</option><option>a note confirming a payment was received</option><option>a document you fill in to apply for a job</option></select></div>
+      </div>
+      <div class="q">
+        <div class="q-row"><div class="q-num">4</div><div class="q-text">Which verb means "to make an electronic copy of a paper document"?</div></div>
+        <div class="mc" id="mc4">
+          <label class="mc-opt" onclick="pickMC('q4','print',this,'mc4')"><div class="radio"></div>a) print</label>
+          <label class="mc-opt" onclick="pickMC('q4','scan',this,'mc4')"><div class="radio"></div>b) scan</label>
+          <label class="mc-opt" onclick="pickMC('q4','sign',this,'mc4')"><div class="radio"></div>c) sign</label>
+          <label class="mc-opt" onclick="pickMC('q4','reduce',this,'mc4')"><div class="radio"></div>d) reduce</label>
+        </div>
+      </div>
+      <div class="q">
+        <div class="q-row"><div class="q-num">5</div><div class="q-text">You add a document to an email before sending it. Which verb is this?</div></div>
+        <div class="mc" id="mc5">
+          <label class="mc-opt" onclick="pickMC('q5','save',this,'mc5')"><div class="radio"></div>a) save</label>
+          <label class="mc-opt" onclick="pickMC('q5','upload',this,'mc5')"><div class="radio"></div>b) upload</label>
+          <label class="mc-opt" onclick="pickMC('q5','attach',this,'mc5')"><div class="radio"></div>c) attach</label>
+          <label class="mc-opt" onclick="pickMC('q5','forward',this,'mc5')"><div class="radio"></div>d) forward</label>
+        </div>
+      </div>
+      <div class="q">
+        <div class="q-row"><div class="q-num">6</div><div class="q-text">Which verb means "to put a file onto an online system or cloud"?</div></div>
+        <div class="mc" id="mc6">
+          <label class="mc-opt" onclick="pickMC('q6','fill in',this,'mc6')"><div class="radio"></div>a) fill in</label>
+          <label class="mc-opt" onclick="pickMC('q6','receive',this,'mc6')"><div class="radio"></div>b) receive</label>
+          <label class="mc-opt" onclick="pickMC('q6','print',this,'mc6')"><div class="radio"></div>c) print</label>
+          <label class="mc-opt" onclick="pickMC('q6','upload',this,'mc6')"><div class="radio"></div>d) upload</label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION B: FILL + T/F — Past Simple -->
+  <div class="section">
+    <div class="sec-head"><div class="sec-badge">B</div><div class="sec-info"><div class="sec-type">Fill in the Blank &amp; True or False</div><div class="sec-title">Language at Work — Past Simple: be &amp; Regular Verbs</div></div><div class="sec-pts"><strong>14</strong>pts · 2 each</div></div>
+    <div class="sec-body">
+      <div class="ctx"><span class="ctx-lbl">📌 Q7–Q10: Write one word only — was · were · wasn't · weren't · did · didn't</span></div>
+      <div class="q">
+        <div class="q-row"><div class="q-num">7</div><div class="q-text">I'm sorry I'm late. I _____ at the presentation on branding this morning.</div></div>
+        <div class="fill-wrap"><input class="fill-input" type="text" id="q7" placeholder="One word..." oninput="updateProgress()"><div class="fill-hint">Past of "to be" — positive, I</div></div>
+      </div>
+      <div class="q">
+        <div class="q-row"><div class="q-num">8</div><div class="q-text">The presentation _____ really interesting — everyone asked great questions.</div></div>
+        <div class="fill-wrap"><input class="fill-input" type="text" id="q8" placeholder="One word..." oninput="updateProgress()"><div class="fill-hint">Past of "to be" — positive, it</div></div>
+      </div>
+      <div class="q">
+        <div class="q-row"><div class="q-num">9</div><div class="q-text">There _____ many people at breakfast, but lots came for the presentation itself.</div></div>
+        <div class="fill-wrap"><input class="fill-input" type="text" id="q9" placeholder="One word..." oninput="updateProgress()"><div class="fill-hint">Negative past — there + plural</div></div>
+      </div>
+      <div class="q">
+        <div class="q-row"><div class="q-num">10</div><div class="q-text">She _____ phone the hotel yesterday — she forgot completely.</div></div>
+        <div class="fill-wrap"><input class="fill-input" type="text" id="q10" placeholder="One word..." oninput="updateProgress()"><div class="fill-hint">Negative past simple — regular verb</div></div>
+      </div>
+      <div class="q">
+        <div class="q-row"><div class="q-num">11</div><div class="q-text">"Did you call Ron Peters?" is the correct past simple question form.</div></div>
+        <div class="tf">
+          <label class="tf-opt" onclick="pickTF('q11','True',this)"><div class="tf-box"></div>True</label>
+          <label class="tf-opt" onclick="pickTF('q11','False',this)"><div class="tf-box"></div>False</label>
+        </div>
+      </div>
+      <div class="q">
+        <div class="q-row"><div class="q-num">12</div><div class="q-text">"She didn't sent the report." is a correct negative sentence.</div></div>
+        <div class="tf">
+          <label class="tf-opt" onclick="pickTF('q12','True',this)"><div class="tf-box"></div>True</label>
+          <label class="tf-opt" onclick="pickTF('q12','False',this)"><div class="tf-box"></div>False</label>
+        </div>
+      </div>
+      <div class="q">
+        <div class="q-row"><div class="q-num">13</div><div class="q-text">"Were you at the meeting?" — "Yes, I was." is a correct short answer.</div></div>
+        <div class="tf">
+          <label class="tf-opt" onclick="pickTF('q13','True',this)"><div class="tf-box"></div>True</label>
+          <label class="tf-opt" onclick="pickTF('q13','False',this)"><div class="tf-box"></div>False</label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION C: DROPDOWN — How to Apologize -->
+  <div class="section">
+    <div class="sec-head"><div class="sec-badge">C</div><div class="sec-info"><div class="sec-type">Dropdown — Choose the Correct Expression</div><div class="sec-title">Practically Speaking — How to Apologize</div></div><div class="sec-pts"><strong>10</strong>pts · 2 each</div></div>
+    <div class="sec-body">
+      <div class="q">
+        <div class="q-row"><div class="q-num">14</div><div class="q-text">You arrive 20 minutes late to a client meeting. What do you say?</div></div>
+        <div class="drop-wrap"><select class="drop-select" id="q14" onchange="updateProgress()"><option value="">— Select the correct expression —</option><option>No problem!</option><option>I'm sorry I'm late. My train was delayed.</option><option>That's OK. Don't worry.</option><option>Thanks a lot for your help.</option></select></div>
+      </div>
+      <div class="q">
+        <div class="q-row"><div class="q-num">15</div><div class="q-text">Your colleague apologizes for forgetting to send you a file. You respond kindly:</div></div>
+        <div class="drop-wrap"><select class="drop-select" id="q15" onchange="updateProgress()"><option value="">— Select the correct response —</option><option>I'm really sorry I forgot.</option><option>I'm sorry I missed your call.</option><option>No problem! Don't worry about it.</option><option>Sorry I'm late — my train was delayed.</option></select></div>
+      </div>
+      <div class="q">
+        <div class="q-row"><div class="q-num">16</div><div class="q-text">You forgot to send an important report to your manager. How do you apologize?</div></div>
+        <div class="drop-wrap"><select class="drop-select" id="q16" onchange="updateProgress()"><option value="">— Select the correct expression —</option><option>That's OK. Don't worry.</option><option>I'm really sorry I forgot to send the report. I'll do it now.</option><option>No problem!</option><option>Thanks a lot for your help.</option></select></div>
+      </div>
+      <div class="q">
+        <div class="q-row"><div class="q-num">17</div><div class="q-text">Someone apologizes for not calling you back. You say it's not a problem:</div></div>
+        <div class="drop-wrap"><select class="drop-select" id="q17" onchange="updateProgress()"><option value="">— Select the correct response —</option><option>I'm sorry I missed your call.</option><option>Sorry, I was really busy yesterday.</option><option>That's OK. No problem at all.</option><option>I'm really sorry I forgot.</option></select></div>
+      </div>
+      <div class="q">
+        <div class="q-row"><div class="q-num">18</div><div class="q-text">You weren't at the team meeting because you were sick. Which is the best apology?</div></div>
+        <div class="drop-wrap"><select class="drop-select" id="q18" onchange="updateProgress()"><option value="">— Select the correct expression —</option><option>No problem! I'll do it now.</option><option>Sorry I wasn't at the meeting — I was ill yesterday.</option><option>That would be great, thanks.</option><option>Don't worry. It's fine.</option></select></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION D: MC + T/F — Solving Problems -->
+  <div class="section">
+    <div class="sec-head"><div class="sec-badge">D</div><div class="sec-info"><div class="sec-type">Multiple Choice &amp; True or False</div><div class="sec-title">Business Communication — Solving Problems</div></div><div class="sec-pts"><strong>10</strong>pts · 2 each</div></div>
+    <div class="sec-body">
+      <div class="q">
+        <div class="q-row"><div class="q-num">19</div><div class="q-text">Which expression is used to explain a problem to a colleague?</div></div>
+        <div class="mc" id="mc19">
+          <label class="mc-opt" onclick="pickMC('q19','We need to fix the machine.',this,'mc19')"><div class="radio"></div>a) We need to fix the machine.</label>
+          <label class="mc-opt" onclick="pickMC('q19','Don\'t worry.',this,'mc19')"><div class="radio"></div>b) Don't worry.</label>
+          <label class="mc-opt" onclick="pickMC('q19','We\'ve got a problem with the order.',this,'mc19')"><div class="radio"></div>c) We've got a problem with the order.</label>
+          <label class="mc-opt" onclick="pickMC('q19','Thanks a lot for your help.',this,'mc19')"><div class="radio"></div>d) Thanks a lot for your help.</label>
+        </div>
+      </div>
+      <div class="q">
+        <div class="q-row"><div class="q-num">20</div><div class="q-text">Which expression promises action after a problem is explained?</div></div>
+        <div class="mc" id="mc20">
+          <label class="mc-opt" onclick="pickMC('q20','There are some problems with ...',this,'mc20')"><div class="radio"></div>a) There are some problems with …</label>
+          <label class="mc-opt" onclick="pickMC('q20','I\'ll call the factory and let you know.',this,'mc20')"><div class="radio"></div>b) I'll call the factory and let you know.</label>
+          <label class="mc-opt" onclick="pickMC('q20','We can\'t fix this.',this,'mc20')"><div class="radio"></div>c) We can't fix this.</label>
+          <label class="mc-opt" onclick="pickMC('q20','No problem at all.',this,'mc20')"><div class="radio"></div>d) No problem at all.</label>
+        </div>
+      </div>
+      <div class="q">
+        <div class="q-row"><div class="q-num">21</div><div class="q-text">Someone solves a difficult problem for you. How do you thank them?</div></div>
+        <div class="mc" id="mc21">
+          <label class="mc-opt" onclick="pickMC('q21','I\'ve got a problem with ...',this,'mc21')"><div class="radio"></div>a) I've got a problem with …</label>
+          <label class="mc-opt" onclick="pickMC('q21','We need to ...',this,'mc21')"><div class="radio"></div>b) We need to …</label>
+          <label class="mc-opt" onclick="pickMC('q21','Thanks a lot for your help.',this,'mc21')"><div class="radio"></div>c) Thanks a lot for your help.</label>
+          <label class="mc-opt" onclick="pickMC('q21','We can ...',this,'mc21')"><div class="radio"></div>d) We can …</label>
+        </div>
+      </div>
+      <div class="q">
+        <div class="q-row"><div class="q-num">22</div><div class="q-text">"Don't worry." is an appropriate response when someone explains a problem.</div></div>
+        <div class="tf">
+          <label class="tf-opt" onclick="pickTF('q22','True',this)"><div class="tf-box"></div>True</label>
+          <label class="tf-opt" onclick="pickTF('q22','False',this)"><div class="tf-box"></div>False</label>
+        </div>
+      </div>
+      <div class="q">
+        <div class="q-row"><div class="q-num">23</div><div class="q-text">"I'll speak to the manager and explain the situation." is an example of promising action.</div></div>
+        <div class="tf">
+          <label class="tf-opt" onclick="pickTF('q23','True',this)"><div class="tf-box"></div>True</label>
+          <label class="tf-opt" onclick="pickTF('q23','False',this)"><div class="tf-box"></div>False</label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION E: OPEN ENDED -->
+  <div class="section">
+    <div class="sec-head"><div class="sec-badge">E</div><div class="sec-info"><div class="sec-type">Open-Ended Writing</div><div class="sec-title">Past Simple &amp; Problem Solving</div></div><div class="sec-pts"><strong>4</strong>pts · 2 each</div></div>
+    <div class="sec-body">
+      <div class="q">
+        <div class="q-row"><div class="q-num">24</div><div class="q-text">Write <strong>3–4 sentences</strong> about something that went wrong at work or school recently. Include what the problem was, what you did or didn't do, and how you apologized or solved it. <em>Use past simple: was/were/wasn't, did/didn't + regular verbs.</em></div></div>
+        <div class="open-wrap">
+          <textarea class="open-textarea" id="q24" placeholder="Example: Last week I wasn't at the team meeting because I missed my train. I didn't call my manager to explain. I was really sorry and I sent her an email the same day..." oninput="wc('q24','wc24');updateProgress()"></textarea>
+          <div class="word-count" id="wc24">0 words</div>
+        </div>
+      </div>
+      <div class="q">
+        <div class="q-row"><div class="q-num">25</div><div class="q-text">Write a short workplace conversation of <strong>4–5 lines</strong> where one person explains a problem and the other offers a solution and promises action. <em>Use: I've/We've got a problem with…, We need to…, I'll…, Don't worry. Thanks a lot.</em></div></div>
+        <div class="open-wrap">
+          <textarea class="open-textarea" id="q25" placeholder="A: I've got a problem with the invoice for the Gosport order.&#10;B: Don't worry. What's the problem?&#10;A: ..." oninput="wc('q25','wc25');updateProgress()"></textarea>
+          <div class="word-count" id="wc25">0 words</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="submit-zone" id="submitZone">
+    <p>Please review all your answers before submitting.<br>Once submitted, your teacher receives your answers immediately and <strong>you cannot change them</strong>.</p>
+    <button class="submit-btn" id="submitBtn" onclick="submitExam()">📤 &nbsp;Submit Exam</button>
+  </div>
+  <div class="success" id="successScreen">
+    <div class="success-icon">✅</div>
+    <h2>Exam Submitted!</h2>
+    <p>Your answers have been sent to your teacher successfully.<br>You will receive your grade and feedback soon.<br><br><strong>Well done! 🎉</strong></p>
+  </div>
+</div>
+
+<script>
+const SCRIPT_URL='https://script.google.com/macros/s/AKfycbxpupoUkWhDuARR8RxtmKAV81V_P237hHcWrjZ7om4KbMDXFckonm76UTl8YsNgSSypGA/exec';
+let timeLeft=45*60;
+const timerEl=document.getElementById('timer');
+const timerInt=setInterval(()=>{timeLeft--;const m=Math.floor(timeLeft/60),s=timeLeft%60;timerEl.textContent=`${m}:${s.toString().padStart(2,'0')}`;if(timeLeft<=300)timerEl.classList.add('warn');if(timeLeft<=0){clearInterval(timerInt);submitExam();}},1000);
+const A={};
+function pickMC(qid,val,el,gridId){document.querySelectorAll(`#${gridId} .mc-opt`).forEach(o=>o.classList.remove('sel'));el.classList.add('sel');A[qid]=val;updateProgress();}
+function pickTF(qid,val,el){el.closest('.tf').querySelectorAll('.tf-opt').forEach(o=>o.classList.remove('sel-t','sel-f'));el.classList.add(val==='True'?'sel-t':'sel-f');A[qid]=val;updateProgress();}
+function wc(inputId,countId){const words=document.getElementById(inputId).value.trim().split(/\s+/).filter(w=>w.length).length;document.getElementById(countId).textContent=`${words} word${words!==1?'s':''}`;}
+function updateProgress(){let done=0;['q1','q2','q3'].forEach(q=>{if(document.getElementById(q)?.value)done++;});['q4','q5','q6','q19','q20','q21'].forEach(q=>{if(A[q])done++;});['q7','q8','q9','q10'].forEach(q=>{if(document.getElementById(q)?.value.trim())done++;});['q11','q12','q13','q22','q23'].forEach(q=>{if(A[q])done++;});['q14','q15','q16','q17','q18'].forEach(q=>{if(document.getElementById(q)?.value)done++;});['q24','q25'].forEach(q=>{if(document.getElementById(q)?.value.trim())done++;});document.getElementById('pFill').style.width=(done/25*100)+'%';document.getElementById('pLabel').textContent=`${done} / 25`;}
+function clearErr(inputId,errId){document.getElementById(inputId).classList.remove('err');document.getElementById(errId).classList.remove('show');}
+function getAll(){const g=id=>document.getElementById(id)?.value||'';return{name:document.getElementById('sName').value.trim(),class:document.getElementById('sClass').value.trim(),date:new Date().toLocaleDateString('en-GB'),q1:g('q1'),q2:g('q2'),q3:g('q3'),q4:A.q4||'',q5:A.q5||'',q6:A.q6||'',q7:g('q7').trim(),q8:g('q8').trim(),q9:g('q9').trim(),q10:g('q10').trim(),q11:A.q11||'',q12:A.q12||'',q13:A.q13||'',q14:g('q14'),q15:g('q15'),q16:g('q16'),q17:g('q17'),q18:g('q18'),q19:A.q19||'',q20:A.q20||'',q21:A.q21||'',q22:A.q22||'',q23:A.q23||'',q24:g('q24').trim(),q25:g('q25').trim(),timestamp:new Date().toLocaleString()};}
+async function submitExam(){const data=getAll();let valid=true;if(!data.name){document.getElementById('sName').classList.add('err');document.getElementById('nameErr').classList.add('show');valid=false;}if(!data.class){document.getElementById('sClass').classList.add('err');document.getElementById('classErr').classList.add('show');valid=false;}if(!valid){window.scrollTo({top:0,behavior:'smooth'});return;}const btn=document.getElementById('submitBtn');btn.disabled=true;btn.innerHTML='⏳ &nbsp;Submitting...';try{const fd=new FormData();Object.entries(data).forEach(([k,v])=>fd.append(k,v));await fetch(SCRIPT_URL,{method:'POST',body:fd,mode:'no-cors'});clearInterval(timerInt);document.getElementById('submitZone').style.display='none';document.querySelectorAll('.section,.info-card,.instr,.exam-header').forEach(e=>e.style.display='none');document.getElementById('successScreen').style.display='block';document.querySelector('.sticky-bar').style.background='#166534';}catch(e){btn.disabled=false;btn.innerHTML='📤 &nbsp;Submit Exam';alert('Submission failed. Please check your internet connection and try again.');}}
+updateProgress();
+</script>
+</body>
+</html>
