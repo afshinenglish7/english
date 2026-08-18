@@ -1,0 +1,1814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Boarding Pass: Units 1–3 Review</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#16233B;
+  --navy-2:#1F3252;
+  --paper:#FBF5E7;
+  --paper-2:#F3ECDA;
+  --gold:#C79A3D;
+  --gold-2:#E8C877;
+  --ink:#22293A;
+  --ink-soft:#5B6478;
+  --red:#A23B3B;
+  --green:#3F6E52;
+  --sky:#5C8A96;
+  --line: rgba(34,41,58,0.16);
+  --shadow: 0 10px 30px rgba(22,35,59,0.18);
+  --radius: 14px;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background: var(--navy);
+  background-image:
+    radial-gradient(circle at 15% 10%, rgba(232,200,119,0.10), transparent 40%),
+    radial-gradient(circle at 85% 90%, rgba(92,138,150,0.14), transparent 45%);
+  font-family:'Work Sans', sans-serif;
+  color:var(--ink);
+  min-height:100vh;
+  padding: 28px 16px 60px;
+}
+.wrap{max-width: 980px; margin:0 auto;}
+
+/* ---------- HEADER : BOARDING PASS BANNER ---------- */
+.pass-header{
+  background: var(--paper);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow:hidden;
+  display:flex;
+  position:relative;
+  border: 1px solid rgba(0,0,0,0.06);
+}
+.pass-header::after{
+  content:"";
+  position:absolute; top:0; bottom:0; right:190px;
+  width:0; border-left: 2px dashed rgba(34,41,58,0.25);
+}
+.ph-main{flex:1; padding: 26px 30px;}
+.eyebrow{
+  font-family:'IBM Plex Mono', monospace;
+  letter-spacing:.14em; text-transform:uppercase;
+  font-size:11px; color: var(--sky); font-weight:600;
+}
+h1.title{
+  font-family:'Fraunces', serif; font-weight:700; font-size: 34px;
+  margin:6px 0 4px; color: var(--navy);
+  letter-spacing: -0.01em;
+}
+.subtitle{color:var(--ink-soft); font-size:14.5px; max-width:560px; line-height:1.5;}
+.route-row{
+  display:flex; align-items:center; gap:14px; margin-top:18px;
+  font-family:'IBM Plex Mono', monospace; font-size:13px; color:var(--navy);
+}
+.route-city{font-weight:600; font-size:16px;}
+.route-sub{font-size:10px; color:var(--ink-soft); letter-spacing:.06em;}
+.plane-divider{flex:1; height:1px; background: repeating-linear-gradient(90deg, var(--gold) 0 6px, transparent 6px 12px); position:relative;}
+.plane-divider::after{content:"✈"; position:absolute; right:-2px; top:-11px; color:var(--gold); font-size:16px;}
+.ph-side{
+  width:190px; background: var(--navy); color: var(--paper);
+  padding: 22px 20px; display:flex; flex-direction:column; justify-content:space-between;
+  position:relative;
+}
+.ph-side .label{font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:.1em; color:var(--gold-2); text-transform:uppercase;}
+.ph-side .value{font-family:'IBM Plex Mono',monospace; font-size:20px; font-weight:600; margin-top:2px;}
+.barcode{height:34px; background: repeating-linear-gradient(90deg, var(--paper) 0 2px, transparent 2px 4px, var(--paper) 4px 7px, transparent 7px 10px); opacity:.85; border-radius:2px;}
+
+/* ---------- STAMP PROGRESS NAV ---------- */
+.gates{
+  display:flex; gap:10px; flex-wrap:wrap; justify-content:center;
+  margin: 26px 0 22px;
+}
+.gate-btn{
+  background: var(--paper); border: 2px solid transparent;
+  border-radius: 999px; padding: 10px 18px 10px 14px;
+  font-family:'Work Sans'; font-weight:600; font-size:13.5px; color: var(--navy);
+  cursor:pointer; display:flex; align-items:center; gap:8px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+  transition: transform .15s ease, border-color .15s ease;
+  position:relative;
+}
+.gate-btn:hover{transform: translateY(-2px);}
+.gate-btn.active{border-color: var(--gold); background: var(--gold-2);}
+.gate-num{
+  width:22px; height:22px; border-radius:50%; background:var(--navy); color:var(--gold-2);
+  font-family:'IBM Plex Mono'; font-size:11px; display:flex; align-items:center; justify-content:center;
+  flex-shrink:0;
+}
+.stamp{
+  position:absolute; top:-10px; right:-8px; width:26px; height:26px;
+  border-radius:50%; background: var(--green); color:#fff; font-size:14px;
+  display:flex; align-items:center; justify-content:center; border:2px solid var(--paper);
+  transform: rotate(-12deg) scale(0); transition: transform .35s cubic-bezier(.34,1.56,.64,1);
+}
+.stamp.show{transform: rotate(-12deg) scale(1);}
+
+/* ---------- PANELS ---------- */
+.panel{display:none; animation: fadeIn .3s ease;}
+.panel.active{display:block;}
+@keyframes fadeIn{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
+
+.section-card{
+  background: var(--paper);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 26px 28px 30px;
+  margin-bottom: 20px;
+  border: 1px solid rgba(0,0,0,0.06);
+}
+.section-card h2{
+  font-family:'Fraunces', serif; font-size:23px; margin:0 0 4px; color:var(--navy);
+  display:flex; align-items:center; gap:10px;
+}
+.section-card .hint{color:var(--ink-soft); font-size:13.5px; margin-bottom:18px; line-height:1.5;}
+.gate-tag{
+  display:inline-block; font-family:'IBM Plex Mono'; font-size:10.5px; letter-spacing:.08em;
+  color:var(--sky); text-transform:uppercase; margin-bottom:6px;
+}
+.subhead{
+  font-family:'Fraunces'; font-size:16px; color:var(--navy); margin:22px 0 10px;
+  padding-top:14px; border-top:1px solid var(--line);
+}
+.subhead:first-of-type{border-top:none; padding-top:0; margin-top:6px;}
+
+.task{
+  background: #fff; border:1px solid var(--line); border-radius:10px;
+  padding:18px 20px; margin-bottom:16px;
+}
+.task h3{margin:0 0 12px; font-size:15px; color:var(--navy); font-family:'Work Sans'; font-weight:700;}
+.q-row{
+  display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+  padding: 9px 0; border-bottom: 1px dashed var(--line);
+}
+.q-row:last-child{border-bottom:none;}
+.q-num{font-family:'IBM Plex Mono'; color:var(--sky); font-size:12.5px; min-width:20px;}
+.q-text{flex:1; min-width:180px; font-size:14.5px;}
+input.blank{
+  border:none; border-bottom:2px solid var(--gold); background:transparent;
+  font-family:'Work Sans'; font-size:14.5px; padding:3px 4px; width:130px; color:var(--navy);
+}
+input.blank.wide{width:300px;}
+input.blank:focus{outline:none; border-color: var(--sky);}
+select.blank{
+  border:2px solid var(--gold); border-radius:6px; background:#fff; padding:5px 8px;
+  font-family:'Work Sans'; font-size:13.5px; color:var(--navy);
+}
+button.speak{
+  border:none; background: var(--navy); color:var(--gold-2); width:26px; height:26px; border-radius:50%;
+  cursor:pointer; font-size:12px; flex-shrink:0;
+}
+button.speak:hover{background:var(--sky);}
+.mc-opts{display:flex; gap:8px; flex-wrap:wrap;}
+.mc-opt{
+  border:1.5px solid var(--line); background:#fff; border-radius:8px; padding:6px 12px;
+  cursor:pointer; font-size:13.5px; transition:.15s;
+}
+.mc-opt:hover{border-color:var(--gold);}
+.mc-opt.picked{border-color:var(--navy); background: var(--paper-2);}
+.mc-opt.correct{border-color:var(--green); background:#e6f2ea; color:var(--green); font-weight:600;}
+.mc-opt.wrong{border-color:var(--red); background:#fbeaea; color:var(--red);}
+.feedback-icon{font-size:15px; width:20px; text-align:center;}
+.check-btn, .action-btn{
+  font-family:'Work Sans'; font-weight:600; font-size:13.5px; letter-spacing:.02em;
+  background: var(--navy); color: var(--gold-2); border:none; border-radius:8px;
+  padding: 9px 18px; cursor:pointer; margin-top:8px; transition:.15s;
+}
+.check-btn:hover, .action-btn:hover{background: var(--sky); color:#fff;}
+.reset-btn{
+  background: transparent; color: var(--ink-soft); border:1.5px solid var(--line);
+  font-family:'Work Sans'; font-size:12.5px; border-radius:8px; padding:8px 14px; cursor:pointer; margin-left:8px;
+}
+.score-pill{
+  display:inline-block; font-family:'IBM Plex Mono'; font-size:12.5px; background:var(--navy);
+  color:var(--gold-2); padding:5px 12px; border-radius:999px; margin-left:10px;
+}
+.info-box{
+  background: var(--paper-2); border-left:4px solid var(--gold); border-radius:8px;
+  padding:14px 18px; margin-bottom:16px; font-size:13.5px; line-height:1.6;
+}
+.info-box b{color:var(--navy);}
+
+/* ---------- SPEAKING FLIP CARDS ---------- */
+.cards-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:18px; margin-top:10px;}
+.flip-card{perspective:1200px; height:200px; cursor:pointer;}
+.flip-inner{position:relative; width:100%; height:100%; transition: transform .6s; transform-style:preserve-3d;}
+.flip-card.flipped .flip-inner{transform: rotateY(180deg);}
+.flip-face{
+  position:absolute; inset:0; backface-visibility:hidden; border-radius:12px;
+  padding:18px; display:flex; flex-direction:column; justify-content:space-between;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.18);
+}
+.flip-front{background: var(--navy); color:#fff;}
+.flip-back{background: var(--gold-2); color:var(--navy); transform: rotateY(180deg);}
+.flip-face .tag{font-family:'IBM Plex Mono'; font-size:10px; letter-spacing:.1em; text-transform:uppercase; opacity:.75;}
+.flip-face .body-txt{font-size:13.5px; line-height:1.5; margin-top:8px;}
+.flip-face .flip-hint{font-size:11px; opacity:.7; align-self:flex-end;}
+.flip-back ul{margin:8px 0 0; padding-left:18px; font-size:12.5px; line-height:1.6;}
+
+/* ---------- INTERVIEW CARDS ---------- */
+.interview-grid{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+@media (max-width:640px){.interview-grid{grid-template-columns:1fr;}}
+.interview-col{background:#fff; border:1px solid var(--line); border-radius:10px; padding:16px 18px;}
+.interview-col h4{margin:0 0 10px; font-family:'Fraunces'; color:var(--navy); font-size:17px;}
+.interview-col ol{margin:0; padding-left:20px; font-size:14px; line-height:1.9;}
+
+/* ---------- TIMER ---------- */
+.timer-box{
+  background: var(--navy); color:#fff; border-radius:12px; padding:20px; text-align:center;
+  display:flex; flex-direction:column; align-items:center; gap:10px;
+}
+.timer-display{font-family:'IBM Plex Mono'; font-size:44px; font-weight:600; color:var(--gold-2);}
+.topic-display{font-size:14.5px; min-height:22px; max-width:460px;}
+.timer-controls{display:flex; gap:8px; flex-wrap:wrap; justify-content:center;}
+.timer-controls button{
+  background: var(--gold-2); color:var(--navy); border:none; border-radius:8px; padding:8px 14px;
+  font-weight:600; font-size:13px; cursor:pointer;
+}
+.timer-controls button:hover{background:#fff;}
+.timer-controls button.ghost{background:transparent; color:var(--gold-2); border:1.5px solid var(--gold-2);}
+
+/* ---------- WRITING ---------- */
+textarea.write-area{
+  width:100%; min-height:100px; border:1.5px solid var(--line); border-radius:8px;
+  padding:12px; font-family:'Work Sans'; font-size:14.5px; resize:vertical; color:var(--ink);
+}
+textarea.write-area:focus{outline:none; border-color:var(--gold);}
+.word-count{font-size:12px; color:var(--ink-soft); text-align:right; margin-top:4px;}
+.checklist{display:flex; flex-direction:column; gap:8px; margin-top:14px;}
+.checklist label{font-size:13.5px; display:flex; align-items:center; gap:8px; cursor:pointer;}
+.write-count-badge{
+  font-family:'IBM Plex Mono'; font-size:11px; background:var(--sky); color:#fff; padding:2px 9px;
+  border-radius:999px; margin-left:8px; vertical-align:middle;
+}
+
+/* ---------- WORKSHEET TABLES (Find someone who / survey) ---------- */
+table.worksheet{width:100%; border-collapse:collapse; margin-top:6px; font-size:13.5px;}
+table.worksheet th, table.worksheet td{border:1px solid var(--line); padding:10px 12px; text-align:left;}
+table.worksheet th{background:var(--paper-2); font-family:'Work Sans'; font-weight:700; color:var(--navy);}
+table.worksheet input{border:none; border-bottom:1px solid var(--line); width:100%; font-family:'Work Sans'; font-size:13.5px; padding:3px;}
+table.worksheet input:focus{outline:none; border-color:var(--gold);}
+
+/* ---------- FINAL QUIZ ---------- */
+.quiz-shell{max-width:640px; margin:0 auto;}
+.progress-track{height:8px; background:var(--paper-2); border-radius:999px; overflow:hidden; margin-bottom:18px;}
+.progress-fill{height:100%; background: linear-gradient(90deg, var(--gold), var(--gold-2)); width:0%; transition:width .3s;}
+.quiz-q{font-family:'Fraunces'; font-size:19px; color:var(--navy); margin-bottom:16px; min-height:50px;}
+.quiz-opts{display:flex; flex-direction:column; gap:10px;}
+.quiz-opt{
+  border:1.5px solid var(--line); background:#fff; border-radius:10px; padding:12px 16px;
+  cursor:pointer; font-size:14.5px; text-align:left;
+}
+.quiz-opt:hover{border-color:var(--gold);}
+.quiz-result{text-align:center; padding: 20px 0;}
+.quiz-result .big{font-family:'Fraunces'; font-size:48px; color:var(--navy);}
+.confetti-wrap{position:fixed; inset:0; pointer-events:none; overflow:hidden; z-index:999;}
+.confetti-piece{position:absolute; top:-20px; width:8px; height:14px; opacity:.9;}
+
+.footer-note{text-align:center; color: var(--paper-2); font-size:12px; margin-top:26px; opacity:.7;}
+@media print{
+  body{background:#fff; padding:0;}
+  .pass-header,.gates,.footer-note,.check-btn,.reset-btn,.timer-box,.gate-tag,.action-btn{display:none !important;}
+  .panel{display:block !important;}
+  .section-card{box-shadow:none; border:1px solid #ccc; page-break-inside:avoid;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HEADER -->
+  <div class="pass-header">
+    <div class="ph-main">
+      <div class="eyebrow">Boarding Pass · English in Action</div>
+      <h1 class="title">Units 1–8 Review Flight</h1>
+      <p class="subtitle">A full-length review of Units 1–8: greetings &amp; the verb "be", nationalities, numbers, this/that/these/those, family &amp; possessives, adjectives, simple present, daily routines, free time, and can/can't &amp; likes — with extra-large Writing and Speaking sections.</p>
+      <div class="route-row">
+        <div><div class="route-city">UNIT 1</div><div class="route-sub">GREETINGS &amp; BE</div></div>
+        <div class="plane-divider"></div>
+        <div><div class="route-city">UNIT 8</div><div class="route-sub">LIKES &amp; ABILITIES</div></div>
+      </div>
+    </div>
+    <div class="ph-side">
+      <div>
+        <div class="label">Passenger</div>
+        <div class="value" id="passengerName">STUDENT</div>
+      </div>
+      <div>
+        <div class="label">Seat</div>
+        <div class="value">1A–8B</div>
+      </div>
+      <div class="barcode"></div>
+    </div>
+  </div>
+
+  <!-- GATE NAV -->
+  <div class="gates" id="gateNav">
+    <button class="gate-btn active" data-panel="p1"><span class="gate-num">1</span>Vocabulary<span class="stamp" id="stamp-p1">✓</span></button>
+    <button class="gate-btn" data-panel="p2"><span class="gate-num">2</span>Grammar<span class="stamp" id="stamp-p2">✓</span></button>
+    <button class="gate-btn" data-panel="p3"><span class="gate-num">3</span>Situations<span class="stamp" id="stamp-p3">✓</span></button>
+    <button class="gate-btn" data-panel="p4"><span class="gate-num">4</span>Writing Studio<span class="stamp" id="stamp-p4">✓</span></button>
+    <button class="gate-btn" data-panel="p5"><span class="gate-num">5</span>Speaking Lounge<span class="stamp" id="stamp-p5">✓</span></button>
+    <button class="gate-btn" data-panel="p6"><span class="gate-num">6</span>Final Boarding<span class="stamp" id="stamp-p6">✓</span></button>
+  </div>
+
+  <!-- ============ PANEL 1: VOCABULARY ============ -->
+  <div class="panel active" id="p1">
+    <div class="section-card">
+      <span class="gate-tag">Gate 1 · Warm-up</span>
+      <h2>🔢 Numbers 0–100</h2>
+      <p class="hint">Click the speaker to hear numbers, then complete each task.</p>
+      <div class="task" id="num-seq-task"><h3>A. What number is missing?</h3></div>
+      <div class="task" id="num-spell-task"><h3>B. Match the number to how it's written.</h3></div>
+      <div class="task" id="num-write-task"><h3>C. Write the number (digits).</h3></div>
+    </div>
+
+    <div class="section-card">
+      <h2>📅 Days of the Week</h2>
+      <div class="task" id="days-task"><h3>Complete with the correct day (or number).</h3></div>
+    </div>
+
+    <div class="section-card">
+      <h2>🔤 Alphabet &amp; Spelling</h2>
+      <div class="task" id="alpha-task"><h3>Spell it out — what word or answer fits?</h3></div>
+    </div>
+
+    <div class="section-card">
+      <h2>🌍 Countries &amp; Nationalities</h2>
+      <p class="hint">Match each country to its nationality word.</p>
+      <div class="task" id="nat-match-task"><h3>A. Match country → nationality</h3></div>
+      <div class="task" id="nat-fill-task"><h3>B. Complete the sentence with the correct nationality.</h3></div>
+    </div>
+
+    <div class="section-card">
+      <h2>🎒 Small Things &amp; Souvenirs</h2>
+      <div class="task" id="things-task"><h3>What's the word? Choose the correct thing.</h3></div>
+    </div>
+
+    <div class="section-card">
+      <span class="gate-tag">Unit 4</span>
+      <h2>👨‍👩‍👧 Family &amp; People</h2>
+      <div class="task" id="family-task"><h3>Choose the correct family word.</h3></div>
+    </div>
+
+    <div class="section-card">
+      <h2>🎨 Colors &amp; Common Adjectives</h2>
+      <p class="hint">Match each adjective to its opposite.</p>
+      <div class="task" id="adj-opposite-task"></div>
+    </div>
+
+    <div class="section-card">
+      <span class="gate-tag">Unit 5</span>
+      <h2>🍽️ Food &amp; Drink</h2>
+      <div class="task" id="food-task"><h3>Is it a food or a drink?</h3></div>
+    </div>
+
+    <div class="section-card">
+      <span class="gate-tag">Unit 6</span>
+      <h2>💼 Jobs &amp; Places of Work</h2>
+      <p class="hint">Match each job to the place where that person works.</p>
+      <div class="task" id="jobs-task"></div>
+    </div>
+
+    <div class="section-card">
+      <h2>⏰ A Typical Day</h2>
+      <div class="task" id="routine-task"><h3>Complete the daily routine.</h3></div>
+    </div>
+
+    <div class="section-card">
+      <span class="gate-tag">Unit 7</span>
+      <h2>🎬 Kinds of Movies &amp; Free Time</h2>
+      <div class="task" id="movies-task"><h3>What kind of movie is it?</h3></div>
+    </div>
+
+    <div class="section-card">
+      <span class="gate-tag">Unit 8</span>
+      <h2>🏊 Activities &amp; More Verb Phrases</h2>
+      <div class="task" id="activities-task"><h3>What's the activity?</h3></div>
+    </div>
+  </div>
+
+  <!-- ============ PANEL 2: GRAMMAR ============ -->
+  <div class="panel" id="p2">
+    <div class="section-card">
+      <span class="gate-tag">Gate 2 · Grammar Control</span>
+      <h2>✅ Verb "be" — Affirmative</h2>
+      <div class="task" id="be-affirm-task"><h3>Complete with am / is / are.</h3></div>
+    </div>
+
+    <div class="section-card">
+      <h2>🚫 Verb "be" — Negative</h2>
+      <div class="task" id="be-neg-task"><h3>Complete with the negative form (isn't / aren't / 'm not).</h3></div>
+    </div>
+
+    <div class="section-card">
+      <h2>❓ Verb "be" — Questions &amp; Short Answers</h2>
+      <div class="task" id="be-q-task"><h3>Complete the question.</h3></div>
+    </div>
+
+    <div class="section-card">
+      <h2>🔁 Transform &amp; Fix</h2>
+      <p class="hint">Rewrite the sentence. Type the FULL new sentence.</p>
+      <div class="task" id="transform-task"><h3>A. Change the sentence as shown.</h3></div>
+      <div class="task" id="fix-task"><h3>B. Find the mistake and write the correct sentence.</h3></div>
+    </div>
+
+    <div class="section-card">
+      <h2>🗨️ Wh- Questions (What / Where / Who / How)</h2>
+      <div class="task" id="wh-match-task"><h3>A. Match the question word to the best question.</h3></div>
+      <div class="task" id="wh-write-task"><h3>B. Write the question for each answer.</h3></div>
+    </div>
+
+    <div class="section-card">
+      <h2>🔠 Singular / Plural Nouns &amp; a/an</h2>
+      <div class="task" id="article-task"><h3>A. Choose a or an.</h3></div>
+      <div class="task" id="plural-task"><h3>B. Write the plural form.</h3></div>
+    </div>
+
+    <div class="section-card">
+      <h2>👉 This / That / These / Those</h2>
+      <p class="hint">Read the situation, then choose the correct word.</p>
+      <div class="task" id="demo-task"></div>
+    </div>
+
+    <div class="section-card">
+      <span class="gate-tag">Unit 4</span>
+      <h2>👪 Possessive Adjectives &amp; Possessive 's</h2>
+      <div class="task" id="poss-task"><h3>Complete with my / your / his / her / its / our / their, or Name's.</h3></div>
+    </div>
+
+    <div class="section-card">
+      <h2>🖼️ Adjectives — Word Order</h2>
+      <p class="hint">Choose the sentence with the correct word order.</p>
+      <div class="task" id="adj-order-task"></div>
+    </div>
+
+    <div class="section-card">
+      <span class="gate-tag">Unit 5</span>
+      <h2>▶️ Simple Present — I / you / we / they</h2>
+      <div class="task" id="sp-affirm-task"><h3>A. Complete the affirmative sentence.</h3></div>
+      <div class="task" id="sp-neg-task"><h3>B. Complete the negative sentence (don't).</h3></div>
+      <div class="task" id="sp-q-task"><h3>C. Complete the question (Do).</h3></div>
+    </div>
+
+    <div class="section-card">
+      <span class="gate-tag">Unit 6</span>
+      <h2>▶️ Simple Present — He / She / It</h2>
+      <div class="task" id="sp3-affirm-task"><h3>A. Complete the sentence (add -s / -es).</h3></div>
+      <div class="task" id="sp3-neg-task"><h3>B. Complete the negative sentence (doesn't).</h3></div>
+      <div class="task" id="sp3-q-task"><h3>C. Complete the question (Does).</h3></div>
+    </div>
+
+    <div class="section-card">
+      <h2>🔂 Adverbs of Frequency</h2>
+      <p class="hint">always · usually · often · sometimes · never — choose the sentence with correct word order.</p>
+      <div class="task" id="freq-task"></div>
+    </div>
+
+    <div class="section-card">
+      <span class="gate-tag">Unit 7</span>
+      <h2>❓ Word Order in Questions — be &amp; Simple Present</h2>
+      <div class="task" id="qorder-task"><h3>Change the sentence into a question.</h3></div>
+    </div>
+
+    <div class="section-card">
+      <h2>👉 Imperatives &amp; Object Pronouns</h2>
+      <div class="task" id="imperative-task"><h3>A. Complete the imperative.</h3></div>
+      <div class="task" id="objpronoun-task"><h3>B. Complete with the correct object pronoun (me, him, her, it, us, them, you).</h3></div>
+    </div>
+
+    <div class="section-card">
+      <span class="gate-tag">Unit 8</span>
+      <h2>💪 Can / Can't</h2>
+      <div class="task" id="can-task"><h3>Complete with can or can't.</h3></div>
+    </div>
+
+    <div class="section-card">
+      <h2>❤️ Like / Love / Hate + Verb-ing</h2>
+      <div class="task" id="gerund-task"><h3>Complete with the -ing form of the verb.</h3></div>
+    </div>
+  </div>
+
+  <!-- ============ PANEL 3: SITUATIONS & PRICES ============ -->
+  <div class="panel" id="p3">
+    <div class="section-card">
+      <span class="gate-tag">Gate 3 · Duty Free</span>
+      <h2>🛍️ Complete the Dialogues</h2>
+      <div class="task" id="dialogue-task"><h3>A. At a souvenir stand</h3></div>
+      <div class="task" id="dialogue2-task"><h3>B. Booking a table at a restaurant</h3></div>
+    </div>
+
+    <div class="section-card">
+      <h2>💲 Say the Price</h2>
+      <p class="hint">Write each price in words. Click 🔊 if you need help.</p>
+      <div class="task" id="price-task"></div>
+    </div>
+
+    <div class="section-card">
+      <span class="gate-tag">Unit 5 · Practical English</span>
+      <h2>🕐 Telling the Time</h2>
+      <div class="task" id="time-task"></div>
+    </div>
+
+    <div class="section-card">
+      <h2>😋 Saying How You Feel</h2>
+      <div class="task" id="feelings-task"><h3>Choose the correct feeling.</h3></div>
+    </div>
+
+    <div class="section-card">
+      <span class="gate-tag">Unit 7 · Practical English</span>
+      <h2>📅 Months &amp; Dates</h2>
+      <div class="task" id="months-task"></div>
+    </div>
+
+    <div class="section-card">
+      <h2>📞 Talking on the Phone</h2>
+      <p class="hint">Complete Laura's phone call to Diego.</p>
+      <div class="task" id="phonecall-task"></div>
+    </div>
+  </div>
+
+  <!-- ============ PANEL 4: WRITING STUDIO ============ -->
+  <div class="panel" id="p4">
+    <div class="section-card">
+      <span class="gate-tag">Gate 4 · Baggage Declaration</span>
+      <h2>✍️ Writing Studio <span class="write-count-badge">24 tasks</span></h2>
+      <p class="hint">Write full sentences for every task. Your answers save automatically in this browser — use the Print button at the bottom to hand in a paper copy.</p>
+
+      <div class="subhead">A. Guided Paragraphs</div>
+
+      <div class="task">
+        <h3>1. My Passport — introduce yourself (name, nationality, country, city, job, age, phone number). Write 6–8 sentences.</h3>
+        <textarea class="write-area" data-key="w1" placeholder="Hello! My name is..."></textarea>
+        <div class="word-count" data-count-for="w1">0 words</div>
+      </div>
+
+      <div class="task">
+        <h3>2. My Bag / Pockets — describe 4–6 things using "This is... / These are..."</h3>
+        <textarea class="write-area" data-key="w2" placeholder="This is my phone. These are my keys..."></textarea>
+        <div class="word-count" data-count-for="w2">0 words</div>
+      </div>
+
+      <div class="task">
+        <h3>3. My Classroom — describe 5 things you can see, using this / that / these / those.</h3>
+        <textarea class="write-area" data-key="w3" placeholder="This is my desk. Those are the windows..."></textarea>
+        <div class="word-count" data-count-for="w3">0 words</div>
+      </div>
+
+      <div class="task">
+        <h3>4. A Postcard From a Trip — you're on vacation. Write about the city, the people you meet (nationalities), and a souvenir you buy. 6+ sentences.</h3>
+        <textarea class="write-area" data-key="w4" placeholder="Dear friend, I'm on vacation in..."></textarea>
+        <div class="word-count" data-count-for="w4">0 words</div>
+      </div>
+
+      <div class="task">
+        <h3>5. My Weekly Schedule — which days you have English class, work, and your weekend plans.</h3>
+        <textarea class="write-area" data-key="w5" placeholder="My English class is on Tuesday and Thursday..."></textarea>
+        <div class="word-count" data-count-for="w5">0 words</div>
+      </div>
+
+      <div class="subhead">B. Sentence-Level Practice</div>
+
+      <div class="task">
+        <h3>6. Answer these questions about yourself in full sentences: What's your name? Where are you from? How old are you? What's your phone number? Who's your best friend? How much is your phone?</h3>
+        <textarea class="write-area" data-key="w6" placeholder="1. My name is..."></textarea>
+        <div class="word-count" data-count-for="w6">0 words</div>
+      </div>
+
+      <div class="task">
+        <h3>7. Write 5 NEGATIVE sentences about yourself (things you are not / don't have), using isn't / aren't / 'm not.</h3>
+        <textarea class="write-area" data-key="w7" placeholder="1. I'm not a doctor..."></textarea>
+        <div class="word-count" data-count-for="w7">0 words</div>
+      </div>
+
+      <div class="task">
+        <h3>8. Write 5 QUESTIONS you want to ask a new classmate. Use a different question word each time (What / Where / Who / How / How much).</h3>
+        <textarea class="write-area" data-key="w8" placeholder="1. What's your name?..."></textarea>
+        <div class="word-count" data-count-for="w8">0 words</div>
+      </div>
+
+      <div class="subhead">C. Creative &amp; Applied Writing</div>
+
+      <div class="task">
+        <h3>9. Write your own Hotel Check-in dialogue (6 lines) between a guest and a hotel clerk.</h3>
+        <textarea class="write-area" data-key="w9" placeholder="Clerk: Good afternoon! How can I help you?..."></textarea>
+        <div class="word-count" data-count-for="w9">0 words</div>
+      </div>
+
+      <div class="task">
+        <h3>10. Write your own Café Order dialogue (6 lines), including a price.</h3>
+        <textarea class="write-area" data-key="w10" placeholder="Waiter: Can I help you?..."></textarea>
+        <div class="word-count" data-count-for="w10">0 words</div>
+      </div>
+
+      <div class="task">
+        <h3>11. About My Partner — after your Speaking Lounge interview, write 5 sentences about your partner using he / she.</h3>
+        <textarea class="write-area" data-key="w11" placeholder="My partner's name is... He/She is from..."></textarea>
+        <div class="word-count" data-count-for="w11">0 words</div>
+      </div>
+
+      <div class="task">
+        <h3>12. Class Profile — write a short bio as if for a class name badge (name, nationality, job, one fun fact).</h3>
+        <textarea class="write-area" data-key="w12" placeholder="Name:... Nationality:... Job:... Fun fact:..."></textarea>
+        <div class="word-count" data-count-for="w12">0 words</div>
+      </div>
+
+      <div class="task">
+        <h3>13. Lost and Found — you lost your bag at the airport! Describe 3 things inside it using this / these.</h3>
+        <textarea class="write-area" data-key="w13" placeholder="Excuse me, I have a problem. This is..."></textarea>
+        <div class="word-count" data-count-for="w13">0 words</div>
+      </div>
+
+      <div class="task">
+        <h3>14. My Country — nationality, language(s) spoken, and one interesting fact about your country.</h3>
+        <textarea class="write-area" data-key="w14" placeholder="I'm from... My nationality is..."></textarea>
+        <div class="word-count" data-count-for="w14">0 words</div>
+      </div>
+
+      <div class="task">
+        <h3>15. Free Write: A Day at the Airport — a creative paragraph using greetings, nationalities, numbers, and shopping. Use at least 8 sentences.</h3>
+        <textarea class="write-area" data-key="w15" placeholder="It's 7 a.m. at the airport..."></textarea>
+        <div class="word-count" data-count-for="w15">0 words</div>
+      </div>
+
+      <div class="subhead">D. Paragraph Challenge — write at least one full paragraph (8+ sentences) for each</div>
+
+      <div class="task">
+        <h3>16. My Ideal Vacation — write a paragraph about a vacation you'd love to take: the country, the nationality of the people, your hotel, the food, and something you'd like to buy there.</h3>
+        <textarea class="write-area" data-key="w16" placeholder="My ideal vacation is in..."></textarea>
+        <div class="word-count" data-count-for="w16">0 words</div>
+      </div>
+
+      <div class="task">
+        <h3>17. A New Friend I Met — write a paragraph about meeting a new international friend: their name, nationality, job, and how you got their phone number or email.</h3>
+        <textarea class="write-area" data-key="w17" placeholder="Last week I met someone new..."></textarea>
+        <div class="word-count" data-count-for="w17">0 words</div>
+      </div>
+
+      <div class="task">
+        <h3>18. My Shopping Trip — write a paragraph describing a shopping trip: what you looked at, the prices, and what you bought, using this/that/these/those.</h3>
+        <textarea class="write-area" data-key="w18" placeholder="Yesterday I went shopping..."></textarea>
+        <div class="word-count" data-count-for="w18">0 words</div>
+      </div>
+
+      <div class="task">
+        <h3>19. Interview Report — after interviewing a partner in the Speaking Lounge, write a paragraph about them in the third person (name, nationality, job, phone number, favorite day of the week).</h3>
+        <textarea class="write-area" data-key="w19" placeholder="My partner's name is..."></textarea>
+        <div class="word-count" data-count-for="w19">0 words</div>
+      </div>
+
+      <div class="task">
+        <h3>20. A Typical Day — write a paragraph about your weekly schedule and a typical day: which days you work or study, what time things happen, and your weekend plans.</h3>
+        <textarea class="write-area" data-key="w20" placeholder="On a typical week, I..."></textarea>
+        <div class="word-count" data-count-for="w20">0 words</div>
+      </div>
+
+      <div class="subhead">E. Units 4–8 Paragraph Challenge — write at least one full paragraph for each</div>
+
+      <div class="task">
+        <h3>21. About My Family — write a paragraph about your family using possessives (my, his, her, our) and family vocabulary. 6+ sentences.</h3>
+        <textarea class="write-area" data-key="w21" placeholder="My family is not very big. My mother's name is..."></textarea>
+        <div class="word-count" data-count-for="w21">0 words</div>
+      </div>
+
+      <div class="task">
+        <h3>22. My Daily Routine — write a paragraph in the simple present about a normal day: what time you get up, what you do, and what time you go to bed.</h3>
+        <textarea class="write-area" data-key="w22" placeholder="Every day I get up at..."></textarea>
+        <div class="word-count" data-count-for="w22">0 words</div>
+      </div>
+
+      <div class="task">
+        <h3>23. Things I Can and Can't Do — write a paragraph about your abilities using can and can't (sports, languages, cooking, music, etc.).</h3>
+        <textarea class="write-area" data-key="w23" placeholder="I can speak two languages, but I can't..."></textarea>
+        <div class="word-count" data-count-for="w23">0 words</div>
+      </div>
+
+      <div class="task">
+        <h3>24. My Free Time — write a paragraph about what you like, love, and hate doing in your free time, using verb + -ing.</h3>
+        <textarea class="write-area" data-key="w24" placeholder="In my free time, I love..."></textarea>
+        <div class="word-count" data-count-for="w24">0 words</div>
+      </div>
+
+      <div class="task">
+        <h3>Self-check before you finish</h3>
+        <div class="checklist">
+          <label><input type="checkbox" data-key="c1"> I used am / is / are correctly.</label>
+          <label><input type="checkbox" data-key="c2"> I used a / an correctly.</label>
+          <label><input type="checkbox" data-key="c3"> I used at least one Wh- question.</label>
+          <label><input type="checkbox" data-key="c4"> I used this / that / these / those correctly.</label>
+          <label><input type="checkbox" data-key="c5"> I used at least one negative sentence.</label>
+          <label><input type="checkbox" data-key="c6"> I checked my spelling.</label>
+          <label><input type="checkbox" data-key="c7"> I used simple present correctly (remembered -s/-es for he/she/it).</label>
+          <label><input type="checkbox" data-key="c8"> I used can/can't or like/love/hate + -ing correctly.</label>
+        </div>
+      </div>
+      <button class="action-btn" onclick="window.print()">🖨️ Print my writing</button>
+    </div>
+  </div>
+
+  <!-- ============ PANEL 5: SPEAKING LOUNGE ============ -->
+  <div class="panel" id="p5">
+    <div class="section-card">
+      <span class="gate-tag">Gate 5 · Now Boarding</span>
+      <h2>🗣️ Partner Interview — Round 1</h2>
+      <p class="hint">Work in pairs. Student A asks Student B the questions below, then switch.</p>
+      <div class="interview-grid">
+        <div class="interview-col">
+          <h4>Student A asks:</h4>
+          <ol>
+            <li>What's your name, and how do you spell your last name?</li>
+            <li>Where are you from? What's your nationality?</li>
+            <li>Are you a student, or do you work?</li>
+            <li>What's your phone number?</li>
+            <li>What's in your bag today? Name three things.</li>
+            <li>What day is your favorite day of the week? Why?</li>
+          </ol>
+        </div>
+        <div class="interview-col">
+          <h4>Student B asks:</h4>
+          <ol>
+            <li>How old are you? (You can say "I'd rather not say"!)</li>
+            <li>Who's your best friend? Where's he/she from?</li>
+            <li>Is your city big or small?</li>
+            <li>How much is your phone, more or less?</li>
+            <li>Point to something in the room. "What's that?"</li>
+            <li>Are you a good cook? A good singer? A good dancer?</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <h2>🗣️ Partner Interview — Round 2: Things &amp; Numbers</h2>
+      <p class="hint">Switch partners if you can. Ask and answer these too.</p>
+      <div class="interview-grid">
+        <div class="interview-col">
+          <h4>Ask about things:</h4>
+          <ol>
+            <li>What's your favorite souvenir? Where's it from?</li>
+            <li>Is this pen expensive or cheap?</li>
+            <li>How many keys are on your key chain?</li>
+            <li>Do you have sunglasses? Are they new or old?</li>
+            <li>What's one thing you never leave home without?</li>
+          </ol>
+        </div>
+        <div class="interview-col">
+          <h4>Ask about numbers:</h4>
+          <ol>
+            <li>What's your address (just the street number)?</li>
+            <li>What's your email address? Spell it!</li>
+            <li>How many students are in this class?</li>
+            <li>What time is it right now?</li>
+            <li>What's a good price for a cup of coffee, in your opinion?</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <h2>🗣️ Partner Interview — Round 3: Family, Routine &amp; Free Time</h2>
+      <p class="hint">A third round for units 4–8. Switch partners again if you can.</p>
+      <div class="interview-grid">
+        <div class="interview-col">
+          <h4>Ask about family &amp; abilities:</h4>
+          <ol>
+            <li>Do you have brothers or sisters? What are their names?</li>
+            <li>What does your mother or father do (job)?</li>
+            <li>Can you cook? Can you swim? Can you drive?</li>
+            <li>What's one thing you can do really well?</li>
+            <li>Is your family big or small?</li>
+          </ol>
+        </div>
+        <div class="interview-col">
+          <h4>Ask about routine &amp; free time:</h4>
+          <ol>
+            <li>What time do you usually get up on weekdays?</li>
+            <li>What do you usually do on weekends?</li>
+            <li>What do you like doing in your free time?</li>
+            <li>What's your favorite kind of movie? Why?</li>
+            <li>Do you love or hate cooking? Cleaning?</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <h2>🎭 Role-Play Cards</h2>
+      <p class="hint">Click a card to flip it and see useful phrases. Act out the situation with a partner, then swap roles.</p>
+      <div class="cards-grid" id="flipCards"></div>
+    </div>
+
+    <div class="section-card">
+      <h2>🎯 Quick-Fire: 6 Topics, 30 Seconds Each</h2>
+      <p class="hint">Each card has its own 30-second timer. Read the topic, hit Start, and speak until time's up — no stopping!</p>
+      <div class="cards-grid" id="quickFireGrid"></div>
+    </div>
+
+    <div class="section-card">
+      <h2>🔎 Find Someone Who... (Mingle Bingo)</h2>
+      <p class="hint">Stand up! Ask your classmates questions. When someone answers "yes," write their name in the box. Try to fill the whole grid.</p>
+      <table class="worksheet" id="bingoTable"></table>
+    </div>
+
+    <div class="section-card">
+      <h2>🎲 Two Truths and a Lie</h2>
+      <div class="info-box">Write 3 sentences about yourself: two true, one false. Use the verb "be" (e.g., nationality, job, age, a possession). Read them to your group — can they guess the lie?</div>
+      <textarea class="write-area" data-key="s_ttl" placeholder="1. I'm from...&#10;2. I have three...&#10;3. I'm 25 years old."></textarea>
+    </div>
+
+    <div class="section-card">
+      <h2>📊 Class Survey</h2>
+      <p class="hint">Ask 5 classmates a question of your choice (e.g., "Are you from this city?" / "Do you have a cell phone?"). Tally the answers.</p>
+      <table class="worksheet" id="surveyTable"></table>
+    </div>
+
+    <div class="section-card">
+      <h2>📖 Storytelling Chain</h2>
+      <div class="info-box"><b>How to play:</b> Sit in a circle. Student 1 says one sentence about a traveler using target grammar (e.g., "Her name is Elena. She's from Poland."). Student 2 repeats it and adds one sentence. Continue around the group — how long can the story get without a mistake?</div>
+    </div>
+
+    <div class="section-card">
+      <h2>🎤 My Passport — 30-Second Presentation</h2>
+      <p class="hint">Prepare, then present to the class or a small group. Include: your name and how to spell it, your nationality, your job, one small thing in your bag, and one question for the audience.</p>
+      <div class="timer-box">
+        <div class="topic-display" id="presTopicDisplay">Get ready to present!</div>
+        <div class="timer-display" id="presTimerDisplay">00:30</div>
+        <div class="timer-controls">
+          <button onclick="presSet(30)">30s</button>
+          <button onclick="presSet(45)">45s</button>
+          <button onclick="presSet(60)">60s</button>
+          <button class="ghost" onclick="presStart()">▶️ Start</button>
+          <button class="ghost" onclick="presPause()">⏸️ Pause</button>
+          <button class="ghost" onclick="presReset()">🔁 Reset</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <h2>⏱️ 60-Second Speaking Challenge</h2>
+      <p class="hint">Click "New Topic", then hit start. Speak for 60 seconds without stopping!</p>
+      <div class="timer-box">
+        <div class="topic-display" id="topicDisplay">Click "New Topic" to begin...</div>
+        <div class="timer-display" id="timerDisplay">01:00</div>
+        <div class="timer-controls">
+          <button onclick="newTopic()">🎲 New Topic</button>
+          <button onclick="startTimer()">▶️ Start</button>
+          <button onclick="pauseTimer()">⏸️ Pause</button>
+          <button onclick="resetTimer()">🔁 Reset</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <h2>💬 Discussion Questions</h2>
+      <p class="hint">Discuss in pairs or small groups. Take notes if you'd like.</p>
+      <div class="task" id="discussionList"></div>
+      <textarea class="write-area" data-key="s_discuss" placeholder="Notes from our discussion..."></textarea>
+    </div>
+  </div>
+
+  <!-- ============ PANEL 6: FINAL QUIZ ============ -->
+  <div class="panel" id="p6">
+    <div class="section-card">
+      <span class="gate-tag">Gate 6 · Final Boarding Call</span>
+      <h2>🏁 Mixed Review Quiz</h2>
+      <p class="hint">20 random questions from everything in Units 1–3. New shuffle every time you play!</p>
+      <div class="quiz-shell" id="quizShell">
+        <div class="progress-track"><div class="progress-fill" id="quizProgress"></div></div>
+        <div id="quizArea"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-note">Built for classroom practice · Units 1–3 Review Flight ✈️</div>
+</div>
+
+<script>
+/* ================= UTILITIES ================= */
+function speak(text){
+  if(!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'en-US'; u.rate = 0.92;
+  window.speechSynthesis.speak(u);
+}
+function norm(s){ return (s||'').trim().toLowerCase().replace(/[.!?]/g,'').replace(/\s+/g,' '); }
+function normLoose(s){ return norm(s).replace(/[-\s]/g,''); }
+function speakBtn(text){
+  const b = document.createElement('button');
+  b.className='speak'; b.innerHTML='🔊'; b.type='button';
+  b.onclick = ()=>speak(text);
+  return b;
+}
+
+/* ================= GATE NAVIGATION ================= */
+const gateBtns = document.querySelectorAll('.gate-btn');
+gateBtns.forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    gateBtns.forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    document.getElementById(btn.dataset.panel).classList.add('active');
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+});
+function markStamp(panelId){
+  const s = document.getElementById('stamp-'+panelId);
+  if(s) s.classList.add('show');
+}
+
+/* ================= GENERIC FILL TASK BUILDER ================= */
+// items: [{q, answer, alt:[optional other accepted], speakText(optional), wide(optional), loose(optional)}]
+function buildFillTask(containerId, items, opts={}){
+  const container = document.getElementById(containerId);
+  const list = document.createElement('div');
+  items.forEach((it,i)=>{
+    const row = document.createElement('div'); row.className='q-row';
+    const num = document.createElement('span'); num.className='q-num'; num.textContent=(i+1)+'.';
+    const qtext = document.createElement('span'); qtext.className='q-text';
+    qtext.innerHTML = it.q.replace('___','<input class="blank'+(it.wide?' wide':'')+'" type="text" data-idx="'+i+'">');
+    row.appendChild(num); row.appendChild(qtext);
+    if(it.speakText){ row.appendChild(speakBtn(it.speakText)); }
+    const fb = document.createElement('span'); fb.className='feedback-icon'; fb.id=containerId+'-fb-'+i;
+    row.appendChild(fb);
+    list.appendChild(row);
+  });
+  container.appendChild(list);
+  const checkBtn = document.createElement('button'); checkBtn.className='check-btn'; checkBtn.textContent='Check my answers';
+  const scorePill = document.createElement('span'); scorePill.className='score-pill'; scorePill.style.display='none';
+  checkBtn.onclick = ()=>{
+    let correct=0;
+    items.forEach((it,i)=>{
+      const input = container.querySelector('input[data-idx="'+i+'"]');
+      const fb = document.getElementById(containerId+'-fb-'+i);
+      const cmp = it.loose ? normLoose : norm;
+      const val = cmp(input.value);
+      const accepted = [cmp(it.answer)].concat((it.alt||[]).map(cmp));
+      if(accepted.includes(val)){ fb.textContent='✅'; correct++; input.style.borderColor='var(--green)';}
+      else{ fb.textContent='❌ ('+it.answer+')'; input.style.borderColor='var(--red)';}
+    });
+    scorePill.style.display='inline-block';
+    scorePill.textContent = correct+' / '+items.length+' correct';
+    if(correct===items.length) markStamp(opts.panel);
+  };
+  container.appendChild(checkBtn);
+  container.appendChild(scorePill);
+}
+
+/* ================= GENERIC SELECT-MATCH TASK BUILDER ================= */
+function buildMatchTask(containerId, items, opts={}){
+  const container = document.getElementById(containerId);
+  items.forEach((it,i)=>{
+    const row = document.createElement('div'); row.className='q-row';
+    const num = document.createElement('span'); num.className='q-num'; num.textContent=(i+1)+'.';
+    const qtext = document.createElement('span'); qtext.className='q-text'; qtext.textContent = it.left;
+    const sel = document.createElement('select'); sel.className='blank'; sel.dataset.idx=i;
+    const def = document.createElement('option'); def.textContent='— choose —'; def.value='';
+    sel.appendChild(def);
+    it.options.forEach(o=>{ const op=document.createElement('option'); op.textContent=o; op.value=o; sel.appendChild(op); });
+    const fb = document.createElement('span'); fb.className='feedback-icon'; fb.id=containerId+'-fb-'+i;
+    row.appendChild(num); row.appendChild(qtext); row.appendChild(sel); row.appendChild(fb);
+    container.appendChild(row);
+  });
+  const checkBtn = document.createElement('button'); checkBtn.className='check-btn'; checkBtn.textContent='Check my answers';
+  const scorePill = document.createElement('span'); scorePill.className='score-pill'; scorePill.style.display='none';
+  checkBtn.onclick = ()=>{
+    let correct=0;
+    items.forEach((it,i)=>{
+      const sel = container.querySelector('select[data-idx="'+i+'"]');
+      const fb = document.getElementById(containerId+'-fb-'+i);
+      if(sel.value===it.correct){ fb.textContent='✅'; correct++; sel.style.borderColor='var(--green)';}
+      else{ fb.textContent='❌ ('+it.correct+')'; sel.style.borderColor='var(--red)';}
+    });
+    scorePill.style.display='inline-block';
+    scorePill.textContent = correct+' / '+items.length+' correct';
+    if(correct===items.length) markStamp(opts.panel);
+  };
+  container.appendChild(checkBtn);
+  container.appendChild(scorePill);
+}
+
+/* ================= GENERIC MULTIPLE CHOICE TASK BUILDER ================= */
+function buildMcTask(containerId, items, opts={}){
+  const container = document.getElementById(containerId);
+  items.forEach((it,i)=>{
+    const row = document.createElement('div'); row.className='q-row'; row.style.flexDirection='column'; row.style.alignItems='flex-start';
+    const top = document.createElement('div'); top.style.display='flex'; top.style.gap='8px'; top.style.width='100%';
+    const num = document.createElement('span'); num.className='q-num'; num.textContent=(i+1)+'.';
+    const qtext = document.createElement('span'); qtext.className='q-text'; qtext.textContent = it.q;
+    top.appendChild(num); top.appendChild(qtext);
+    if(it.speakText) top.appendChild(speakBtn(it.speakText));
+    const opts_div = document.createElement('div'); opts_div.className='mc-opts'; opts_div.style.marginTop='8px'; opts_div.style.marginLeft='28px';
+    it.options.forEach(o=>{
+      const b = document.createElement('button'); b.type='button'; b.className='mc-opt'; b.textContent=o;
+      b.onclick = ()=>{
+        [...opts_div.children].forEach(c=>c.classList.remove('picked'));
+        b.classList.add('picked');
+        opts_div.dataset.picked = o;
+      };
+      opts_div.appendChild(b);
+    });
+    row.appendChild(top); row.appendChild(opts_div);
+    row.dataset.correct = it.correct;
+    container.appendChild(row);
+  });
+  const checkBtn = document.createElement('button'); checkBtn.className='check-btn'; checkBtn.textContent='Check my answers';
+  const scorePill = document.createElement('span'); scorePill.className='score-pill'; scorePill.style.display='none';
+  checkBtn.onclick = ()=>{
+    let correct=0; let rows = container.querySelectorAll('.q-row');
+    rows.forEach(row=>{
+      const opts_div = row.querySelector('.mc-opts');
+      const picked = opts_div.dataset.picked;
+      const answer = row.dataset.correct;
+      [...opts_div.children].forEach(b=>{
+        if(b.textContent===answer) b.classList.add('correct');
+        else if(b.textContent===picked) b.classList.add('wrong');
+      });
+      if(picked===answer) correct++;
+    });
+    scorePill.style.display='inline-block';
+    scorePill.textContent = correct+' / '+rows.length+' correct';
+    if(correct===rows.length) markStamp(opts.panel);
+  };
+  container.appendChild(checkBtn);
+  container.appendChild(scorePill);
+}
+
+/* ================= DATA: PANEL 1 VOCABULARY ================= */
+buildFillTask('num-seq-task', [
+  {q:'5, 10, 15, ___, 25, 30', answer:'20'},
+  {q:'12, 14, 16, ___, 20', answer:'18'},
+  {q:'30, 40, ___, 60, 70', answer:'50'},
+  {q:'65, 70, 75, ___, 85', answer:'80'},
+  {q:'90, 92, 94, ___, 98', answer:'96'},
+  {q:'2, 4, 6, ___, 10', answer:'8'},
+  {q:'100, 90, 80, ___, 60', answer:'70'},
+  {q:'11, 22, 33, ___, 55', answer:'44'},
+], {panel:'p1'});
+
+buildMatchTask('num-spell-task', [
+  {left:'17', correct:'seventeen', options:['seventeen','seventy','seventeenth']},
+  {left:'26', correct:'twenty-six', options:['twenty-six','sixty-two','twenty-sixth']},
+  {left:'38', correct:'thirty-eight', options:['thirty-eight','eighty-three','thirteen']},
+  {left:'54', correct:'fifty-four', options:['fifty-four','forty-five','fourteen']},
+  {left:'71', correct:'seventy-one', options:['seventy-one','seventeen','seventy']},
+  {left:'99', correct:'ninety-nine', options:['ninety-nine','nineteen','ninety']},
+  {left:'12', correct:'twelve', options:['twelve','twenty','twentieth']},
+  {left:'45', correct:'forty-five', options:['forty-five','fifty-four','fourteen']},
+  {left:'63', correct:'sixty-three', options:['sixty-three','thirty-six','sixteen']},
+  {left:'88', correct:'eighty-eight', options:['eighty-eight','eighteen','eight']},
+], {panel:'p1'});
+
+buildFillTask('num-write-task', [
+  {q:'forty-three = ___', answer:'43'},
+  {q:'sixteen = ___', answer:'16'},
+  {q:'eighty = ___', answer:'80'},
+  {q:'twenty-nine = ___', answer:'29'},
+  {q:'one hundred = ___', answer:'100'},
+  {q:'seventy-five = ___', answer:'75'},
+  {q:'twelve = ___', answer:'12'},
+  {q:'sixty-one = ___', answer:'61'},
+], {panel:'p1'});
+
+buildFillTask('days-task', [
+  {q:'The day after Monday is ___.', answer:'Tuesday'},
+  {q:'The day before Friday is ___.', answer:'Thursday'},
+  {q:'The first weekend day is ___.', answer:'Saturday'},
+  {q:'The day between Tuesday and Thursday is ___.', answer:'Wednesday'},
+  {q:'The last day of the week (on many calendars) is ___.', answer:'Sunday'},
+  {q:'The day between Saturday and Monday is ___.', answer:'Sunday'},
+  {q:'How many days are in a weekend? (write the number)', answer:'2', alt:['two']},
+  {q:'The day right before Sunday is ___.', answer:'Saturday'},
+], {panel:'p1'});
+
+buildFillTask('alpha-task', [
+  {q:'C-A-N-A-D-A spells ___.', answer:'Canada'},
+  {q:'M-E-X-I-C-O spells ___.', answer:'Mexico'},
+  {q:'T-E-A-C-H-E-R spells ___.', answer:'teacher'},
+  {q:'P-A-S-S-P-O-R-T spells ___.', answer:'passport'},
+  {q:'S-T-U-D-E-N-T spells ___.', answer:'student'},
+  {q:'H-O-T-E-L spells ___.', answer:'hotel'},
+  {q:'Which letter comes between G and I?', answer:'H'},
+  {q:'How many letters are in the word "English"? (write the number)', answer:'7', alt:['seven']},
+], {panel:'p1'});
+
+buildMatchTask('nat-match-task', [
+  {left:'Mexico', correct:'Mexican', options:['Mexican','Mexicano','Mexica']},
+  {left:'Brazil', correct:'Brazilian', options:['Brazilian','Brazilish','Brazil']},
+  {left:'Japan', correct:'Japanese', options:['Japanese','Japanish','Japaner']},
+  {left:'Turkey', correct:'Turkish', options:['Turkish','Turkeyan','Turkic']},
+  {left:'Canada', correct:'Canadian', options:['Canadian','Canadish','Canadan']},
+  {left:'the United States', correct:'American', options:['American','Unitedish','States-ian']},
+  {left:'Spain', correct:'Spanish', options:['Spanish','Spainish','Spaniard']},
+  {left:'France', correct:'French', options:['French','Francish','Franch']},
+  {left:'China', correct:'Chinese', options:['Chinese','Chinish','Chinan']},
+  {left:'South Korea', correct:'Korean', options:['Korean','Koreash','Koreian']},
+  {left:'Italy', correct:'Italian', options:['Italian','Italish','Italiano']},
+  {left:'Argentina', correct:'Argentinian', options:['Argentinian','Argentish','Argentinan']},
+  {left:'Germany', correct:'German', options:['German','Germanic','Germanish']},
+  {left:'Portugal', correct:'Portuguese', options:['Portuguese','Portugalese','Portugish']},
+  {left:'Russia', correct:'Russian', options:['Russian','Russish','Russic']},
+  {left:'England', correct:'British', options:['British','Englandish','Englander']},
+  {left:'Egypt', correct:'Egyptian', options:['Egyptian','Egyptish','Egypter']},
+  {left:'India', correct:'Indian', options:['Indian','Indish','Indiese']},
+], {panel:'p1'});
+
+buildFillTask('nat-fill-task', [
+  {q:'He\'s from Japan. He\'s ___.', answer:'Japanese'},
+  {q:'They\'re from Brazil. They\'re ___.', answer:'Brazilian'},
+  {q:'We\'re from Turkey. We\'re ___.', answer:'Turkish'},
+  {q:'I\'m from Spain. I\'m ___.', answer:'Spanish'},
+  {q:'She\'s from South Korea. She\'s ___.', answer:'Korean'},
+  {q:'You\'re from Germany. You\'re ___.', answer:'German'},
+  {q:'It\'s a car from Italy. It\'s ___.', answer:'Italian'},
+  {q:'They\'re from Egypt. They\'re ___.', answer:'Egyptian'},
+], {panel:'p1'});
+
+buildMcTask('things-task', [
+  {q:'You use this to open your front door.', options:['a key','a wallet','glasses'], correct:'a key'},
+  {q:'You wear these to see better.', options:['glasses','a mug','a T-shirt'], correct:'glasses'},
+  {q:'You keep your money and cards in this.', options:['an umbrella','a wallet','a magnet'], correct:'a wallet'},
+  {q:'You use this to make phone calls.', options:['a phone charger','a phone','a key chain'], correct:'a phone'},
+  {q:'You use this when it\'s raining.', options:['an umbrella','sunglasses','a cap'], correct:'an umbrella'},
+  {q:'Tourists often buy one of these to remember their trip.', options:['a souvenir','a passport','an address'], correct:'a souvenir'},
+  {q:'You put this on your head in the sun.', options:['a cap','a wallet','an umbrella'], correct:'a cap'},
+  {q:'You wear these dark glasses on a sunny day.', options:['sunglasses','glasses','a mug'], correct:'sunglasses'},
+  {q:'You drink coffee from this.', options:['a mug','a key chain','a magnet'], correct:'a mug'},
+  {q:'You put this on your refrigerator to remember a trip.', options:['a magnet','a wallet','an ID card'], correct:'a magnet'},
+], {panel:'p1'});
+
+buildMcTask('family-task', [
+  {q:'Your father\'s father is your ___.', options:['grandfather','uncle','father'], correct:'grandfather'},
+  {q:'Your parents\' daughter (not you) is your ___.', options:['sister','aunt','cousin'], correct:'sister'},
+  {q:'A man who is married is someone\'s ___.', options:['husband','son','brother'], correct:'husband'},
+  {q:'Your mother and father together are your ___.', options:['parents','grandparents','siblings'], correct:'parents'},
+  {q:'Your son\'s daughter is your ___.', options:['granddaughter','niece','daughter'], correct:'granddaughter'},
+  {q:'Your brother\'s wife is your ___.', options:['sister-in-law','aunt','cousin'], correct:'sister-in-law'},
+  {q:'Your children (both boys and girls together) are your ___.', options:['sons','children','daughters'], correct:'children'},
+  {q:'A woman who is married is someone\'s ___.', options:['wife','daughter','sister'], correct:'wife'},
+], {panel:'p1'});
+
+buildMatchTask('adj-opposite-task', [
+  {left:'big', correct:'small', options:['small','fast','cheap']},
+  {left:'new', correct:'old', options:['old','bad','slow']},
+  {left:'expensive', correct:'cheap', options:['cheap','big','difficult']},
+  {left:'good', correct:'bad', options:['bad','new','hot']},
+  {left:'easy', correct:'difficult', options:['difficult','small','cold']},
+  {left:'fast', correct:'slow', options:['slow','sad','cheap']},
+  {left:'happy', correct:'sad', options:['sad','old','easy']},
+  {left:'hot', correct:'cold', options:['cold','bad','fast']},
+], {panel:'p1'});
+
+buildMcTask('food-task', [
+  {q:'bread', options:['Food','Drink'], correct:'Food'},
+  {q:'coffee', options:['Food','Drink'], correct:'Drink'},
+  {q:'rice', options:['Food','Drink'], correct:'Food'},
+  {q:'tea', options:['Food','Drink'], correct:'Drink'},
+  {q:'eggs', options:['Food','Drink'], correct:'Food'},
+  {q:'water', options:['Food','Drink'], correct:'Drink'},
+  {q:'chicken', options:['Food','Drink'], correct:'Food'},
+  {q:'juice', options:['Food','Drink'], correct:'Drink'},
+], {panel:'p1'});
+
+buildMatchTask('jobs-task', [
+  {left:'teacher', correct:'school', options:['school','hospital','restaurant']},
+  {left:'doctor', correct:'hospital', options:['hospital','office','kitchen']},
+  {left:'waiter', correct:'restaurant', options:['restaurant','airport','school']},
+  {left:'chef', correct:'kitchen', options:['kitchen','police station','office']},
+  {left:'police officer', correct:'police station', options:['police station','hospital','restaurant']},
+  {left:'engineer', correct:'office', options:['office','kitchen','airport']},
+  {left:'nurse', correct:'hospital', options:['hospital','school','office']},
+  {left:'pilot', correct:'airport', options:['airport','restaurant','police station']},
+], {panel:'p1'});
+
+buildFillTask('routine-task', [
+  {q:'I ___ (get up) at 7 o\'clock.', answer:'get up'},
+  {q:'She ___ (have) breakfast at 8.', answer:'has'},
+  {q:'They ___ (go) to work at 9.', answer:'go'},
+  {q:'He ___ (finish) work at 6 pm.', answer:'finishes'},
+  {q:'We ___ (have) dinner at 8 pm.', answer:'have'},
+  {q:'I ___ (go) to bed at 11 pm.', answer:'go'},
+], {panel:'p1'});
+
+buildMcTask('movies-task', [
+  {q:'A movie that makes you laugh is a ___.', options:['comedy','horror','thriller'], correct:'comedy'},
+  {q:'A movie with monsters or scary things is a ___.', options:['horror','romantic','comedy'], correct:'horror'},
+  {q:'A movie with lots of fighting and explosions is an ___.', options:['action','animated','romantic'], correct:'action'},
+  {q:'A movie about love is a ___ movie.', options:['romantic','horror','action'], correct:'romantic'},
+  {q:'A movie that keeps you in suspense is a ___.', options:['thriller','comedy','romantic'], correct:'thriller'},
+  {q:'A cartoon movie for kids is an ___ movie.', options:['animated','action','horror'], correct:'animated'},
+], {panel:'p1'});
+
+buildMcTask('activities-task', [
+  {q:'You do this in the kitchen to make food.', options:['cook dinner','clean the house','do homework'], correct:'cook dinner'},
+  {q:'You do this to make your home tidy.', options:['clean the house','ride a bike','take photos'], correct:'clean the house'},
+  {q:'Students do this after school.', options:['do homework','go swimming','play video games'], correct:'do homework'},
+  {q:'You do this in a pool or the sea.', options:['go swimming','cook dinner','listen to music'], correct:'go swimming'},
+  {q:'You do this with headphones or speakers.', options:['listen to music','ride a bike','clean the house'], correct:'listen to music'},
+  {q:'You do this with a camera or a phone.', options:['take photos','play video games','do homework'], correct:'take photos'},
+], {panel:'p1'});
+
+/* ================= DATA: PANEL 2 GRAMMAR ================= */
+buildFillTask('be-affirm-task', [
+  {q:'I ___ a teacher.', answer:'am', alt:["'m"]},
+  {q:'Ana and Carlos ___ from Monterrey.', answer:'are'},
+  {q:'My sister ___ 19 years old.', answer:'is'},
+  {q:'We ___ students in this class.', answer:'are'},
+  {q:'You ___ very kind.', answer:'are'},
+  {q:'It ___ a nice day today.', answer:'is'},
+  {q:'They ___ from Argentina.', answer:'are'},
+  {q:'This souvenir ___ nice.', answer:'is'},
+  {q:'My friends and I ___ students.', answer:'are'},
+  {q:'Today ___ Monday.', answer:'is'},
+], {panel:'p2'});
+
+buildFillTask('be-neg-task', [
+  {q:'I ___ from Canada.', answer:"am not", alt:["'m not","im not"]},
+  {q:'She ___ a doctor.', answer:"isn't", alt:['is not']},
+  {q:'They ___ at home right now.', answer:"aren't", alt:['are not']},
+  {q:'We ___ late.', answer:"aren't", alt:['are not']},
+  {q:'This bag ___ expensive.', answer:"isn't", alt:['is not']},
+  {q:'He ___ my teacher.', answer:"isn't", alt:['is not']},
+  {q:'You ___ late.', answer:"aren't", alt:['are not']},
+  {q:'The keys ___ here.', answer:"aren't", alt:['are not']},
+], {panel:'p2'});
+
+buildFillTask('be-q-task', [
+  {q:'___ you a student? — Yes, I am.', answer:'Are'},
+  {q:'___ she from Brazil? — No, she isn\'t.', answer:'Is'},
+  {q:'___ they teachers? — Yes, they are.', answer:'Are'},
+  {q:'___ it expensive? — No, it isn\'t.', answer:'Is'},
+  {q:'___ we late? — No, we aren\'t.', answer:'Are'},
+  {q:'___ this cap $10? — Yes, it is.', answer:'Is'},
+  {q:'___ your parents from Canada? — No, they aren\'t.', answer:'Are'},
+  {q:'___ I late? — No, you aren\'t.', answer:'Am'},
+], {panel:'p2'});
+
+buildFillTask('transform-task', [
+  {q:'"She is a doctor." → negative: ___', answer:"She isn't a doctor", alt:['she is not a doctor'], wide:true},
+  {q:'"They are from Spain." → negative: ___', answer:"They aren't from Spain", alt:['they are not from spain'], wide:true},
+  {q:'"You are late." → question: ___', answer:'Are you late', wide:true},
+  {q:'"He is a teacher." → question: ___', answer:'Is he a teacher', wide:true},
+  {q:'"I am from Canada." → negative: ___', answer:"I'm not from Canada", alt:['i am not from canada'], wide:true},
+  {q:'"It is expensive." → question: ___', answer:'Is it expensive', wide:true},
+], {panel:'p2'});
+
+buildFillTask('fix-task', [
+  {q:'"She are from Brazil." → ___', answer:'She is from Brazil', alt:["she's from brazil"], wide:true},
+  {q:'"I is a student." → ___', answer:'I am a student', alt:["i'm a student"], wide:true},
+  {q:'"They is teachers." → ___', answer:'They are teachers', alt:["they're teachers"], wide:true},
+  {q:'"This are my keys." → ___', answer:'These are my keys', wide:true},
+  {q:'"I have a umbrella." → ___', answer:'I have an umbrella', wide:true},
+  {q:'"It\'s a apple." → ___', answer:"It's an apple", alt:['it is an apple'], wide:true},
+], {panel:'p2'});
+
+buildMatchTask('wh-match-task', [
+  {left:'"___ your name?"', correct:"What's your name?", options:["What's your name?","Where's your name?","How's your name?"]},
+  {left:'"___ are you from?"', correct:'Where are you from?', options:['Where are you from?','What are you from?','Who are you from?']},
+  {left:'"___ your English teacher?"', correct:"Who's your English teacher?", options:["Who's your English teacher?","What's your English teacher?","Where's your English teacher?"]},
+  {left:'"___ old are you?"', correct:'How old are you?', options:['How old are you?','What old are you?','Who old are you?']},
+  {left:'"___ is this bag?"', correct:'How much is this bag?', options:['How much is this bag?','What much is this bag?','Where much is this bag?']},
+  {left:'"___ is your phone number?"', correct:"What's your phone number?", options:["What's your phone number?","Where's your phone number?","Who's your phone number?"]},
+  {left:'"___ much are these sunglasses?"', correct:'How much are these sunglasses?', options:['How much are these sunglasses?','What much are these sunglasses?','Where much are these sunglasses?']},
+  {left:'"___ is that man over there?"', correct:"Who's that man over there?", options:["Who's that man over there?","What's that man over there?","How's that man over there?"]},
+], {panel:'p2'});
+
+buildFillTask('wh-write-task', [
+  {q:'Answer: "I\'m from Monterrey." Question: ___', answer:'Where are you from', alt:["where are you from?"], wide:true},
+  {q:'Answer: "She\'s 25." Question: ___', answer:'How old is she', alt:['how old is she?'], wide:true},
+  {q:'Answer: "It\'s $15." Question: ___', answer:'How much is it', alt:['how much is it?'], wide:true},
+  {q:'Answer: "He\'s Alex." Question: ___', answer:"Who's he", alt:["who is he","who's he?","what's his name","whats his name"], wide:true},
+  {q:'Answer: "They\'re from Canada." Question: ___', answer:'Where are they from', alt:['where are they from?'], wide:true},
+  {q:'Answer: "It\'s $40." Question: ___', answer:'How much is it', alt:['how much is it?'], wide:true},
+  {q:'Answer: "I\'m 30." Question: ___', answer:'How old are you', alt:['how old are you?'], wide:true},
+], {panel:'p2'});
+
+buildMcTask('article-task', [
+  {q:'___ umbrella', options:['a','an'], correct:'an'},
+  {q:'___ key', options:['a','an'], correct:'a'},
+  {q:'___ egg', options:['a','an'], correct:'an'},
+  {q:'___ wallet', options:['a','an'], correct:'a'},
+  {q:'___ orange', options:['a','an'], correct:'an'},
+  {q:'___ phone', options:['a','an'], correct:'a'},
+  {q:'___ hour', options:['a','an'], correct:'an'},
+  {q:'___ souvenir', options:['a','an'], correct:'a'},
+  {q:'___ address', options:['a','an'], correct:'an'},
+  {q:'___ mug', options:['a','an'], correct:'a'},
+], {panel:'p2'});
+
+buildFillTask('plural-task', [
+  {q:'one bag → two ___', answer:'bags'},
+  {q:'one phone → two ___', answer:'phones'},
+  {q:'one book → two ___', answer:'books'},
+  {q:'one glass → two ___', answer:'glasses'},
+  {q:'one box → two ___', answer:'boxes'},
+  {q:'one watch → two ___', answer:'watches'},
+  {q:'(bonus) one country → two ___', answer:'countries'},
+  {q:'(bonus) one city → two ___', answer:'cities'},
+  {q:'(bonus) one address → two ___', answer:'addresses'},
+], {panel:'p2'});
+
+const demoItems = [
+  {q:'You are holding a pen in your hand. You say: "___ is my pen."', options:['This','That','These','Those'], correct:'This'},
+  {q:'Your friend is far away, near the window, holding a bag. You say: "___ is her bag."', options:['This','That','These','Those'], correct:'That'},
+  {q:'You are holding two keys in your hand. You say: "___ are my keys."', options:['This','That','These','Those'], correct:'These'},
+  {q:'Three people are far away, near the door. You say: "___ are my classmates."', options:['This','That','These','Those'], correct:'Those'},
+  {q:'You point at a watch right next to you on the table. You say: "How much is ___ watch?"', options:['this','that','these','those'], correct:'this'},
+  {q:'Your keys are on the table right next to you. "___ are my keys."', options:['This','That','These','Those'], correct:'These'},
+  {q:'Look at the mountains far away. "___ are beautiful."', options:['This','That','These','Those'], correct:'Those'},
+  {q:'You show a photo on your phone right now. "___ is my new phone."', options:['This','That','These','Those'], correct:'This'},
+];
+buildMcTask('demo-task', demoItems, {panel:'p2'});
+
+buildFillTask('poss-task', [
+  {q:'I have a car. It\'s ___ car.', answer:'my'},
+  {q:'You have a dog. It\'s ___ dog.', answer:'your'},
+  {q:'He has a phone. It\'s ___ phone.', answer:'his'},
+  {q:'She has keys. They\'re ___ keys.', answer:'her'},
+  {q:'We have a house. It\'s ___ house.', answer:'our'},
+  {q:'They have children. They are ___ children.', answer:'their'},
+  {q:'Sara has a phone. It\'s ___ phone.', answer:"Sara's"},
+], {panel:'p2'});
+
+buildMcTask('adj-order-task', [
+  {q:'Choose the correct sentence:', options:['It\'s a car red.','It\'s a red car.'], correct:'It\'s a red car.'},
+  {q:'Choose the correct sentence:', options:['She has a house big.','She has a big house.'], correct:'She has a big house.'},
+  {q:'Choose the correct sentence:', options:['This is an old phone.','This is a phone old.'], correct:'This is an old phone.'},
+  {q:'Choose the correct sentence:', options:['They\'re shoes expensive.','They\'re expensive shoes.'], correct:'They\'re expensive shoes.'},
+  {q:'Choose the correct sentence:', options:['It\'s a difficult question.','It\'s a question difficult.'], correct:'It\'s a difficult question.'},
+], {panel:'p2'});
+
+buildFillTask('sp-affirm-task', [
+  {q:'I ___ (work) in an office.', answer:'work'},
+  {q:'They ___ (like) coffee.', answer:'like'},
+  {q:'We ___ (live) in Monterrey.', answer:'live'},
+  {q:'You ___ (speak) English well.', answer:'speak'},
+  {q:'I ___ (have) two brothers.', answer:'have'},
+], {panel:'p2'});
+
+buildFillTask('sp-neg-task', [
+  {q:'I ___ (not/like) tea.', answer:"don't like"},
+  {q:'They ___ (not/work) on Sundays.', answer:"don't work"},
+  {q:'We ___ (not/eat) meat.', answer:"don't eat"},
+  {q:'You ___ (not/live) here.', answer:"don't live"},
+], {panel:'p2'});
+
+buildFillTask('sp-q-task', [
+  {q:'___ you speak English?', answer:'Do'},
+  {q:'___ they live near here?', answer:'Do'},
+  {q:'___ we need a reservation?', answer:'Do'},
+  {q:'___ I need my passport?', answer:'Do'},
+], {panel:'p2'});
+
+buildFillTask('sp3-affirm-task', [
+  {q:'She ___ (work) in a hospital.', answer:'works'},
+  {q:'He ___ (watch) movies on weekends.', answer:'watches'},
+  {q:'It ___ (rain) a lot here.', answer:'rains'},
+  {q:'She ___ (study) every night.', answer:'studies'},
+  {q:'He ___ (go) to the gym.', answer:'goes'},
+  {q:'She ___ (have) a new phone.', answer:'has'},
+], {panel:'p2'});
+
+buildFillTask('sp3-neg-task', [
+  {q:'He ___ (not/like) fish.', answer:"doesn't like"},
+  {q:'She ___ (not/work) on Fridays.', answer:"doesn't work"},
+  {q:'It ___ (not/rain) much here.', answer:"doesn't rain"},
+], {panel:'p2'});
+
+buildFillTask('sp3-q-task', [
+  {q:'___ she speak English?', answer:'Does'},
+  {q:'___ he live near here?', answer:'Does'},
+  {q:'___ it cost a lot?', answer:'Does'},
+], {panel:'p2'});
+
+buildMcTask('freq-task', [
+  {q:'Choose the correct sentence:', options:['I drink always coffee.','I always drink coffee.'], correct:'I always drink coffee.'},
+  {q:'Choose the correct sentence:', options:['She is never late.','She never is late.'], correct:'She is never late.'},
+  {q:'Choose the correct sentence:', options:['We usually have lunch at 2.','We have usually lunch at 2.'], correct:'We usually have lunch at 2.'},
+  {q:'Choose the correct sentence:', options:['They sometimes go swimming.','They go sometimes swimming.'], correct:'They sometimes go swimming.'},
+  {q:'Choose the correct sentence:', options:['He often is tired.','He is often tired.'], correct:'He is often tired.'},
+], {panel:'p2'});
+
+buildFillTask('qorder-task', [
+  {q:'"You like pizza." → question: ___', answer:'Do you like pizza', wide:true},
+  {q:'"She works here." → question: ___', answer:'Does she work here', wide:true},
+  {q:'"They are from Canada." → question: ___', answer:'Are they from Canada', wide:true},
+  {q:'"He watches movies." → question: ___', answer:'Does he watch movies', wide:true},
+  {q:'"You are a teacher." → question: ___', answer:'Are you a teacher', wide:true},
+], {panel:'p2'});
+
+buildFillTask('imperative-task', [
+  {q:'___ (open) your book, please.', answer:'Open'},
+  {q:'___ (not/be) late!', answer:"Don't be"},
+  {q:'___ (close) the door, please.', answer:'Close'},
+  {q:'___ (not/worry)!', answer:"Don't worry"},
+  {q:'___ (listen) carefully.', answer:'Listen'},
+], {panel:'p2'});
+
+buildFillTask('objpronoun-task', [
+  {q:'I like Tom. I like ___.', answer:'him'},
+  {q:'Do you know Ana? Yes, I know ___.', answer:'her'},
+  {q:'This gift is for Maria. It\'s for ___.', answer:'her'},
+  {q:'These are for my parents. They\'re for ___.', answer:'them'},
+  {q:'Call me later. Please call ___.', answer:'me'},
+  {q:'I have a new phone. Do you want to see ___?', answer:'it'},
+], {panel:'p2'});
+
+buildFillTask('can-task', [
+  {q:'She ___ swim very well.', answer:'can'},
+  {q:'They ___ come to the party. (negative)', answer:"can't"},
+  {q:'___ you drive? — Yes, I can.', answer:'Can'},
+  {q:'He ___ speak three languages.', answer:'can'},
+  {q:'I ___ cook, but I ___ bake. (can / can\'t)', answer:'can', wide:true},
+], {panel:'p2'});
+
+buildFillTask('gerund-task', [
+  {q:'I love ___ (cook).', answer:'cooking'},
+  {q:'She hates ___ (clean) the house.', answer:'cleaning'},
+  {q:'We like ___ (travel).', answer:'traveling', alt:['travelling']},
+  {q:'They don\'t like ___ (wait).', answer:'waiting'},
+  {q:'He loves ___ (dance).', answer:'dancing'},
+  {q:'I hate ___ (get up) early.', answer:'getting up'},
+], {panel:'p2'});
+
+/* ================= DATA: PANEL 3 SHOPPING ================= */
+buildFillTask('dialogue-task', [
+  {q:'Tourist: Good morning! How ___ is this cap?', answer:'much'},
+  {q:'Vendor: It\'s 250 pesos. Tourist: And how much ___ those sunglasses?', answer:'are'},
+  {q:'Vendor: They\'re 180 pesos. Tourist: OK, I\'ll take the cap. Here you ___.', answer:'are'},
+  {q:'Vendor: Thanks! Here\'s your ___.', answer:'change'},
+], {panel:'p3'});
+
+buildFillTask('dialogue2-task', [
+  {q:'Host: Good evening. Do you have a ___?', answer:'reservation'},
+  {q:'Guest: Yes, a table for two, please.  Host: What ___ is the reservation?', answer:'name'},
+  {q:'Guest: Martinez.  Host: Perfect, this ___ please.', answer:'way'},
+  {q:'Host: Here\'s your table. ___ you like something to drink?', answer:'Would'},
+], {panel:'p3'});
+
+buildFillTask('price-task', [
+  {q:'$15 = ___', answer:'fifteen dollars', speakText:'fifteen dollars'},
+  {q:'$99 = ___', answer:'ninety-nine dollars', speakText:'ninety-nine dollars'},
+  {q:'250 pesos = ___', answer:'two hundred fifty pesos', alt:['two hundred and fifty pesos'], speakText:'two hundred fifty pesos'},
+  {q:'$40 = ___', answer:'forty dollars', speakText:'forty dollars'},
+  {q:'$8 = ___', answer:'eight dollars', speakText:'eight dollars'},
+  {q:'500 pesos = ___', answer:'five hundred pesos', speakText:'five hundred pesos'},
+], {panel:'p3'});
+
+buildFillTask('time-task', [
+  {q:'3:00 = three ___', answer:"o'clock"},
+  {q:'6:30 = half past ___', answer:'six'},
+  {q:'9:00 = ___ o\'clock', answer:'nine'},
+  {q:'12:30 = half past ___', answer:'twelve'},
+  {q:'1:00 = ___ o\'clock', answer:'one'},
+], {panel:'p3'});
+
+buildMcTask('feelings-task', [
+  {q:'You haven\'t eaten all day. You are ___.', options:['hungry','thirsty','tired'], correct:'hungry'},
+  {q:'You need water right now. You are ___.', options:['thirsty','hungry','cold'], correct:'thirsty'},
+  {q:'You didn\'t sleep well last night. You are ___.', options:['tired','hot','happy'], correct:'tired'},
+  {q:'It\'s snowing and you don\'t have a coat. You are ___.', options:['cold','hot','hungry'], correct:'cold'},
+  {q:'It\'s 40°C outside. You are ___.', options:['hot','cold','thirsty'], correct:'hot'},
+], {panel:'p3'});
+
+buildFillTask('months-task', [
+  {q:'The month after June is ___.', answer:'July'},
+  {q:'The first month of the year is ___.', answer:'January'},
+  {q:'The month before December is ___.', answer:'November'},
+  {q:'The last month of the year is ___.', answer:'December'},
+  {q:'1st = ___', answer:'first'},
+  {q:'3rd = ___', answer:'third'},
+], {panel:'p3'});
+
+buildFillTask('phonecall-task', [
+  {q:'Laura: Hi, it\'s Laura. Can I ___ to Diego, please?', answer:'speak'},
+  {q:'Diego: Hello, this is Diego. Laura: Are you free ___ Friday?', answer:'on'},
+  {q:'Diego: Yes, I am. What time? Laura: How ___ 7 pm?', answer:'about'},
+  {q:'Diego: Perfect, see you ___!', answer:'then'},
+], {panel:'p3'});
+
+/* ================= PANEL 4: WORD COUNT + AUTOSAVE ================= */
+document.querySelectorAll('.write-area').forEach(ta=>{
+  const key = 'boardingpass_'+ta.dataset.key;
+  const saved = localStorage.getItem(key);
+  if(saved) ta.value = saved;
+  const counter = document.querySelector('[data-count-for="'+ta.dataset.key+'"]');
+  function updateCount(){
+    const words = ta.value.trim().split(/\s+/).filter(Boolean).length;
+    if(counter) counter.textContent = words + ' words';
+    localStorage.setItem(key, ta.value);
+  }
+  ta.addEventListener('input', updateCount);
+  updateCount();
+});
+document.querySelectorAll('.checklist input[type=checkbox]').forEach(cb=>{
+  const key = 'boardingpass_'+cb.dataset.key;
+  cb.checked = localStorage.getItem(key)==='1';
+  cb.addEventListener('change', ()=>{
+    localStorage.setItem(key, cb.checked ? '1':'0');
+    if([...document.querySelectorAll('.checklist input')].every(c=>c.checked)) markStamp('p4');
+  });
+});
+
+/* ================= PANEL 5: FLIP CARDS ================= */
+const roleCards = [
+  {tag:'Situation 1', front:'You are a guest checking into a hotel. Introduce yourself, spell your last name, and ask for your room.', back:['I have a reservation.','How do you spell that?','You\'re in room ___.','Thank you!']},
+  {tag:'Situation 2', front:'You\'re ordering lunch at a café. Order a sandwich and a drink, then ask the price.', back:['Can I have a ___, please?','Anything else?','How much is it?','Here you are.']},
+  {tag:'Situation 3', front:'Introduce yourself to a new classmate. Ask their name and where they\'re from.', back:['Nice to meet you.','Where are you from?','I\'m from ___.','What do you do?']},
+  {tag:'Situation 4', front:'You\'re at a souvenir stand. Ask the price of two items, then buy one.', back:['How much is/are ___?','I\'ll take this one.','Here you are.','Thanks, bye!']},
+  {tag:'Situation 5', front:'You want to book a table at a restaurant for tonight. Call and ask for a table for two.', back:['I\'d like to book a table, please.','A table for two.','What name, please?','See you tonight!']},
+  {tag:'Situation 6', front:'You lost your bag at the airport! Describe 3 things inside it to the staff.', back:['Excuse me, I have a problem.','This is my... / These are my...','It\'s / They\'re...','Thank you for your help.']},
+  {tag:'Situation 7', front:'You\'re at passport control. Answer the officer\'s questions about your trip.', back:['Are you on vacation or here for work?','What\'s your nationality?','How long are you here?','Enjoy your trip!']},
+  {tag:'Situation 8', front:'Exchange phone numbers and email addresses with a new friend.', back:['What\'s your phone number?','Can you spell your email?','Is that a cell number?','Great, I\'ll text you!']},
+  {tag:'Situation 9', front:'A friend asks how you\'re feeling and what time it is. Answer both — and ask them back!', back:['I\'m hungry / tired / cold...','It\'s ___ o\'clock.','How about you?','What time is it for you?']},
+  {tag:'Situation 10', front:'Call a friend and invite them to do something this weekend. Agree on a day and time.', back:['Hi, it\'s ___. Can I speak to...?','Are you free on ___?','How about ___ o\'clock?','See you then!']},
+];
+const cardsWrap = document.getElementById('flipCards');
+roleCards.forEach(c=>{
+  const card = document.createElement('div'); card.className='flip-card';
+  card.innerHTML = `<div class="flip-inner">
+    <div class="flip-face flip-front">
+      <div><span class="tag">${c.tag}</span><div class="body-txt">${c.front}</div></div>
+      <div class="flip-hint">tap to see phrases →</div>
+    </div>
+    <div class="flip-face flip-back">
+      <div><span class="tag">Useful phrases</span><ul>${c.back.map(p=>'<li>'+p+'</li>').join('')}</ul></div>
+    </div>
+  </div>`;
+  card.addEventListener('click', ()=>card.classList.toggle('flipped'));
+  cardsWrap.appendChild(card);
+});
+
+/* ================= PANEL 5: QUICK-FIRE 30-SECOND TOPICS ================= */
+const quickFireTopics = [
+  'Introduce yourself: your name, nationality, and job.',
+  'Describe 3 things in your bag or pocket right now.',
+  'Say as many numbers as you can: counting, a phone number, a price.',
+  'Talk about your favorite day of the week and why.',
+  'Order lunch at a café — say both the customer\'s and waiter\'s lines quickly!',
+  'Describe a souvenir you\'d like to buy, and how much it costs.',
+];
+const qfGrid = document.getElementById('quickFireGrid');
+const qfStates = [];
+quickFireTopics.forEach((topic,i)=>{
+  const card = document.createElement('div'); card.className='task';
+  card.innerHTML = `<h3>${i+1}. ${topic}</h3>
+    <div class="timer-display" id="qfTimer${i}" style="color:var(--navy); font-size:30px; margin:8px 0;">00:30</div>
+    <div class="timer-controls" style="justify-content:flex-start;">
+      <button class="check-btn" style="margin-top:0;" onclick="qfStart(${i})">▶️ Start</button>
+      <button class="reset-btn" onclick="qfReset(${i})">🔁 Reset</button>
+    </div>`;
+  qfGrid.appendChild(card);
+  qfStates.push({left:30, interval:null});
+});
+function qfUpdate(i){
+  const el = document.getElementById('qfTimer'+i);
+  if(el) el.textContent = '00:'+String(qfStates[i].left).padStart(2,'0');
+}
+function qfStart(i){
+  if(qfStates[i].interval) return;
+  qfStates[i].interval = setInterval(()=>{
+    if(qfStates[i].left>0){ qfStates[i].left--; qfUpdate(i); }
+    else{
+      clearInterval(qfStates[i].interval); qfStates[i].interval=null;
+      document.getElementById('qfTimer'+i).textContent='✅ Done!';
+      markStamp('p5');
+    }
+  },1000);
+}
+function qfReset(i){
+  clearInterval(qfStates[i].interval); qfStates[i].interval=null;
+  qfStates[i].left=30; qfUpdate(i);
+}
+quickFireTopics.forEach((_,i)=>qfUpdate(i));
+
+/* ================= PANEL 5: BINGO & SURVEY TABLES ================= */
+const bingoItems = [
+  'is from a different country',
+  'has a souvenir in their bag right now',
+  'is not a teacher',
+  'has more than 3 keys',
+  'can spell their last name in under 10 seconds',
+  'has a phone number starting with the same digit as yours',
+  'is wearing something blue',
+  'has sunglasses with them today',
+  'was born on a Sunday',
+];
+const bingoTable = document.getElementById('bingoTable');
+let bingoHTML = '<tr><th>Find someone who...</th><th>Name</th></tr>';
+bingoItems.forEach(b=>{ bingoHTML += `<tr><td>${b}</td><td><input type="text" placeholder="name"></td></tr>`; });
+bingoTable.innerHTML = bingoHTML;
+
+const surveyTable = document.getElementById('surveyTable');
+let surveyHTML = '<tr><th>My question:</th><td colspan="2"><input type="text" placeholder="Write your question here"></td></tr><tr><th>Classmate</th><th>Answer</th><th>Notes</th></tr>';
+for(let i=1;i<=5;i++){ surveyHTML += `<tr><td><input type="text" placeholder="name"></td><td><input type="text" placeholder="yes / no / ..."></td><td><input type="text" placeholder="notes"></td></tr>`; }
+surveyTable.innerHTML = surveyHTML;
+
+/* ================= PANEL 5: DISCUSSION QUESTIONS ================= */
+const discussionQs = [
+  'Is English easy or difficult for you? Why?',
+  'What\'s your favorite number, and why?',
+  'Are you a morning person or a night person?',
+  'What\'s in your bag that you never leave home without?',
+  'Is your hometown big or small? Is it expensive to live there?',
+  'What\'s a good souvenir to bring from your country?',
+  'Do you prefer books or phones? Why?',
+  'What day of the week is your favorite? Why?',
+  'Is it easy to meet new people in your city?',
+  'What\'s an interesting nationality or culture you\'d like to learn about?',
+  'Are you close to your family? Do you see them often?',
+  'What\'s something you can do well that most people can\'t?',
+  'What do you usually do after work or class?',
+  'What\'s something you love doing, and something you hate doing?',
+];
+const discussList = document.getElementById('discussionList');
+const dol = document.createElement('ol'); dol.style.lineHeight='2'; dol.style.fontSize='14.5px'; dol.style.paddingLeft='20px';
+discussionQs.forEach(q=>{ const li=document.createElement('li'); li.textContent=q; dol.appendChild(li); });
+discussList.appendChild(dol);
+
+/* ================= PANEL 5: SPEAKING TIMER (challenge) ================= */
+const speakTopics = [
+  'Introduce yourself: your name, country, nationality, and job.',
+  'Describe five things in your bag or pocket using this/these.',
+  'Talk about numbers you use every day (phone number, age, address).',
+  'Describe your classroom — what\'s in it?',
+  'Talk about your favorite souvenir from a trip.',
+  'Ask a partner five questions about themselves.',
+  'Describe how to check into a hotel, step by step.',
+  'Talk about prices — what\'s expensive and what\'s cheap where you live?',
+  'Describe a market or shop you like, using this/that/these/those.',
+  'Talk about the days of your week — work, class, and free time.',
+  'Describe someone in your family or a friend using he/she and nationality.',
+  'Talk about a country you want to visit and why.',
+  'Practice spelling: say your full name and email address out loud.',
+  'Describe a good restaurant — what do you order there?',
+  'Talk about your phone: brand, price, and how old it is.',
+];
+let timeLeft = 60, timerInterval = null;
+function updateTimerDisplay(){
+  const m = String(Math.floor(timeLeft/60)).padStart(2,'0');
+  const s = String(timeLeft%60).padStart(2,'0');
+  document.getElementById('timerDisplay').textContent = m+':'+s;
+}
+function newTopic(){
+  const t = speakTopics[Math.floor(Math.random()*speakTopics.length)];
+  document.getElementById('topicDisplay').textContent = t;
+}
+function startTimer(){
+  if(timerInterval) return;
+  timerInterval = setInterval(()=>{
+    if(timeLeft>0){ timeLeft--; updateTimerDisplay(); }
+    else{ clearInterval(timerInterval); timerInterval=null; markStamp('p5'); document.getElementById('topicDisplay').textContent='⏰ Time\'s up! Great job.'; }
+  },1000);
+}
+function pauseTimer(){ clearInterval(timerInterval); timerInterval=null; }
+function resetTimer(){ pauseTimer(); timeLeft=60; updateTimerDisplay(); }
+updateTimerDisplay();
+
+/* ================= PANEL 5: PRESENTATION TIMER ================= */
+let presTimeTotal = 30, presTimeLeft = 30, presInterval = null;
+function presUpdate(){
+  const m = String(Math.floor(presTimeLeft/60)).padStart(2,'0');
+  const s = String(presTimeLeft%60).padStart(2,'0');
+  document.getElementById('presTimerDisplay').textContent = m+':'+s;
+}
+function presSet(sec){ presPause(); presTimeTotal=sec; presTimeLeft=sec; presUpdate(); document.getElementById('presTopicDisplay').textContent='Ready — '+sec+' seconds. Good luck!'; }
+function presStart(){
+  if(presInterval) return;
+  presInterval = setInterval(()=>{
+    if(presTimeLeft>0){ presTimeLeft--; presUpdate(); }
+    else{ clearInterval(presInterval); presInterval=null; markStamp('p5'); document.getElementById('presTopicDisplay').textContent='⏰ Time\'s up! Nice presentation.'; }
+  },1000);
+}
+function presPause(){ clearInterval(presInterval); presInterval=null; }
+function presReset(){ presPause(); presTimeLeft=presTimeTotal; presUpdate(); }
+presUpdate();
+
+/* ================= PANEL 6: FINAL MIXED QUIZ ================= */
+const quizBank = [
+  {q:'Complete: "We ___ from Turkey."', options:['am','is','are'], correct:'are'},
+  {q:'Complete: "She ___ a teacher."', options:['am','is','are'], correct:'is'},
+  {q:'Negative: "They ___ students."', options:["isn't","aren't","am not"], correct:"aren't"},
+  {q:'"___ you a student?" — "Yes, I am."', options:['Am','Is','Are'], correct:'Are'},
+  {q:'He\'s from Brazil. He\'s ___.', options:['Brazilish','Brazilian','Brazily'], correct:'Brazilian'},
+  {q:'She\'s from Japan. She\'s ___.', options:['Japanese','Japanish','Japaner'], correct:'Japanese'},
+  {q:'They\'re from Turkey. They\'re ___.', options:['Turkey','Turkish','Turkic'], correct:'Turkish'},
+  {q:'thirteen = ?', options:['30','13','31'], correct:'13'},
+  {q:'80 = ?', options:['eight','eighty','eighteen'], correct:'eighty'},
+  {q:'The day after Wednesday is:', options:['Tuesday','Thursday','Friday'], correct:'Thursday'},
+  {q:'Choose a or an: ___ apple', options:['a','an'], correct:'an'},
+  {q:'Choose a or an: ___ book', options:['a','an'], correct:'a'},
+  {q:'Plural of "watch":', options:['watchs','watches','watchies'], correct:'watches'},
+  {q:'You hold one key. "___ is my key."', options:['This','These','Those'], correct:'This'},
+  {q:'Two keys in your hand: "___ are my keys."', options:['This','That','These'], correct:'These'},
+  {q:'Something far away: "___ is my friend, over there."', options:['This','That','These'], correct:'That'},
+  {q:'"___ is your name?"', options:['What','Where','Who'], correct:'What'},
+  {q:'"___ are you from?"', options:['What','Where','Who'], correct:'Where'},
+  {q:'"___ old are you?"', options:['What','How','Who'], correct:'How'},
+  {q:'"How much ___ this souvenir?"', options:['is','are','am'], correct:'is'},
+  {q:'"How much ___ these sunglasses?"', options:['is','are','am'], correct:'are'},
+  {q:'Question form of "He is a doctor.":', options:['Is he a doctor?','Does he a doctor?','Are he a doctor?'], correct:'Is he a doctor?'},
+  {q:'Negative of "I am late.":', options:["I amn't late.","I'm not late.","I not am late."], correct:"I'm not late."},
+  {q:'He\'s from Germany. He\'s ___.', options:['Germanic','German','Germanish'], correct:'German'},
+  {q:'She\'s from Egypt. She\'s ___.', options:['Egyptian','Egyptish','Egypter'], correct:'Egyptian'},
+  {q:'one city → two ___', options:['citys','cities','citties'], correct:'cities'},
+  {q:'one country → two ___', options:['countrys','countries','countryes'], correct:'countries'},
+  {q:'Choose a or an: ___ hour', options:['a','an'], correct:'an'},
+  {q:'"You\'re in room 214." Who says this?', options:['a hotel clerk','a waiter','a vendor'], correct:'a hotel clerk'},
+  {q:'"Can I have a sandwich, please?" is said where?', options:['at a café','at a hotel','at the airport'], correct:'at a café'},
+  {q:'twenty-nine = ?', options:['29','92','19'], correct:'29'},
+  {q:'ninety-one = ?', options:['19','91','9'], correct:'91'},
+  {q:'The days of the weekend are:', options:['Monday & Tuesday','Saturday & Sunday','Friday & Saturday'], correct:'Saturday & Sunday'},
+  {q:'"I\'ll take this one" — who says this?', options:['a shopper','a hotel clerk','a teacher'], correct:'a shopper'},
+  {q:'Plural of "box":', options:['boxs','boxes','boxies'], correct:'boxes'},
+  {q:'"___ much are those?" (prices, plural)', options:['How','What','Who'], correct:'How'},
+  {q:'"Where\'s he from?" "___ from Italy."', options:['He is','He are','He am'], correct:'He is'},
+  {q:'Choose a or an: ___ umbrella', options:['a','an'], correct:'an'},
+  {q:'Choose a or an: ___ wallet', options:['a','an'], correct:'a'},
+  {q:'"This / These are my sunglasses." (choose correct word)', options:['This','These'], correct:'These'},
+  {q:'"It\'s ___ car." (belongs to me)', options:['my','me','I'], correct:'my'},
+  {q:'"Sara has a phone." → "It\'s ___ phone."', options:["Sara's",'Sara','Saras'], correct:"Sara's"},
+  {q:'Your father\'s mother is your ___.', options:['grandmother','aunt','mother'], correct:'grandmother'},
+  {q:'Choose the correct sentence:', options:['It\'s a red big car.','It\'s a big red car.'], correct:"It's a big red car."},
+  {q:'Opposite of "expensive":', options:['cheap','big','fast'], correct:'cheap'},
+  {q:'Simple present: "I ___ (work) in an office."', options:['work','works','working'], correct:'work'},
+  {q:'Simple present: "She ___ (work) in a hospital."', options:['work','works','working'], correct:'works'},
+  {q:'Negative: "He ___ like fish."', options:["don't","doesn't","isn't"], correct:"doesn't"},
+  {q:'Question: "___ you speak English?"', options:['Do','Does','Are'], correct:'Do'},
+  {q:'Question: "___ she live near here?"', options:['Do','Does','Is'], correct:'Does'},
+  {q:'Choose the correct sentence:', options:['I always drink coffee.','I drink always coffee.'], correct:'I always drink coffee.'},
+  {q:'Question form: "She works here." →', options:['Does she work here?','Do she work here?','Is she work here?'], correct:'Does she work here?'},
+  {q:'Imperative: "___ the door, please."', options:['Close','Closes','Closing'], correct:'Close'},
+  {q:'Object pronoun: "I like Tom. I like ___."', options:['he','him','his'], correct:'him'},
+  {q:'"She ___ swim very well." (ability)', options:['can','is','does'], correct:'can'},
+  {q:'"I love ___ (cook)."', options:['cook','cooking','cooks'], correct:'cooking'},
+  {q:'A movie that makes you laugh is a ___.', options:['comedy','horror','thriller'], correct:'comedy'},
+  {q:'A teacher usually works in a ___.', options:['hospital','school','kitchen'], correct:'school'},
+  {q:'"6:30" in words:', options:['half past six','six thirty past','half six past'], correct:'half past six'},
+];
+let quizQueue = [], quizIndex = 0, quizScore = 0;
+function shuffle(arr){ return arr.map(v=>[Math.random(),v]).sort((a,b)=>a[0]-b[0]).map(v=>v[1]); }
+function startQuiz(){
+  quizQueue = shuffle(quizBank).slice(0,20);
+  quizIndex = 0; quizScore = 0;
+  renderQuizQ();
+}
+function renderQuizQ(){
+  const area = document.getElementById('quizArea');
+  document.getElementById('quizProgress').style.width = (quizIndex/quizQueue.length*100)+'%';
+  if(quizIndex >= quizQueue.length){
+    const pct = Math.round(quizScore/quizQueue.length*100);
+    let msg = pct>=80 ? 'Excellent! Ready for takeoff. ✈️' : pct>=50 ? 'Good progress — a bit more review!' : 'Let\'s review Units 1–3 again together.';
+    area.innerHTML = `<div class="quiz-result">
+      <div class="big">${quizScore} / ${quizQueue.length}</div>
+      <p>${msg}</p>
+      <button class="action-btn" onclick="startQuiz()">🔁 Play again</button>
+    </div>`;
+    document.getElementById('quizProgress').style.width='100%';
+    if(pct>=80){ markStamp('p6'); launchConfetti(); }
+    return;
+  }
+  const item = quizQueue[quizIndex];
+  const opts = shuffle(item.options);
+  area.innerHTML = `<div class="quiz-q">${item.q}</div><div class="quiz-opts">` +
+    opts.map(o=>`<button class="quiz-opt" data-val="${o}">${o}</button>`).join('') + `</div>`;
+  area.querySelectorAll('.quiz-opt').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const val = btn.dataset.val;
+      area.querySelectorAll('.quiz-opt').forEach(b=>b.disabled=true);
+      if(val===item.correct){ btn.style.background='#e6f2ea'; btn.style.borderColor='var(--green)'; quizScore++; }
+      else{
+        btn.style.background='#fbeaea'; btn.style.borderColor='var(--red)';
+        area.querySelectorAll('.quiz-opt').forEach(b=>{ if(b.dataset.val===item.correct){ b.style.background='#e6f2ea'; b.style.borderColor='var(--green)';} });
+      }
+      setTimeout(()=>{ quizIndex++; renderQuizQ(); }, 800);
+    });
+  });
+}
+function launchConfetti(){
+  const wrap = document.createElement('div'); wrap.className='confetti-wrap';
+  document.body.appendChild(wrap);
+  const colors = ['#C79A3D','#E8C877','#5C8A96','#A23B3B','#3F6E52'];
+  for(let i=0;i<60;i++){
+    const p = document.createElement('div'); p.className='confetti-piece';
+    p.style.left = Math.random()*100+'vw';
+    p.style.background = colors[Math.floor(Math.random()*colors.length)];
+    p.style.animation = `fall ${2+Math.random()*2}s linear forwards`;
+    p.style.transform = `rotate(${Math.random()*360}deg)`;
+    wrap.appendChild(p);
+  }
+  const styleSheet = document.createElement('style');
+  styleSheet.textContent = '@keyframes fall{to{transform:translateY(105vh) rotate(360deg); opacity:.3;}}';
+  document.head.appendChild(styleSheet);
+  setTimeout(()=>wrap.remove(), 4200);
+}
+startQuiz();
+</script>
+</body>
+</html>
