@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Listening Practice — Units 16–18</title>
+<style>
+  :root {
+    --navy:#1A3557;--blue:#2E6DA4;--orange:#C55A11;
+    --lblue:#D6E4F0;--yellow:#FFF2CC;--white:#FFFFFF;
+    --light:#F7FBFF;--border:#BBBBBB;--text:#1A1A1A;--muted:#555555;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:Calibri,Arial,sans-serif;font-size:13px;background:#edf2f7;color:var(--text);}
+  header{background:var(--navy);color:white;padding:22px 32px 16px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.3);}
+  header h1{font-size:22px;letter-spacing:.5px;}
+  header p{font-size:12px;opacity:.75;margin-top:2px;}
+  .tab-bar{display:flex;gap:4px;background:var(--navy);padding:0 32px 0;border-top:1px solid rgba(255,255,255,.15);}
+  .tab-btn{padding:10px 22px;background:transparent;border:none;border-bottom:3px solid transparent;color:rgba(255,255,255,.65);cursor:pointer;font-size:13px;font-weight:600;transition:all .2s;}
+  .tab-btn:hover{color:white;}
+  .tab-btn.active{color:white;border-bottom-color:var(--orange);}
+  .unit-panel{display:none;max-width:900px;margin:28px auto;padding:0 16px 60px;}
+  .unit-panel.active{display:block;}
+  .unit-banner{background:var(--navy);color:white;padding:16px 24px;border-radius:6px 6px 0 0;font-size:18px;font-weight:700;letter-spacing:.4px;}
+  .section{background:white;border:1px solid var(--border);border-top:none;padding:20px 24px;}
+  .section:last-child{border-radius:0 0 6px 6px;}
+  .section-bar{display:flex;align-items:center;gap:10px;background:var(--lblue);margin:-20px -24px 16px;padding:10px 16px;border-bottom:1px solid #b8d4eb;}
+  .section-icon{color:var(--orange);font-size:15px;font-weight:700;}
+  .section-title{color:var(--navy);font-size:14px;font-weight:700;}
+  .instruction{background:var(--yellow);border-left:3px solid var(--orange);padding:8px 14px;font-style:italic;color:var(--muted);margin-bottom:16px;border-radius:0 4px 4px 0;font-size:12px;}
+  .pre-q{margin-bottom:14px;}
+  .pre-q label{display:block;font-weight:600;color:var(--orange);margin-bottom:6px;}
+  .pre-q textarea{width:100%;min-height:60px;padding:8px 10px;border:1px solid var(--border);border-radius:4px;font-family:inherit;font-size:13px;resize:vertical;color:var(--text);}
+  .pre-q textarea:focus{outline:none;border-color:var(--blue);}
+  .vocab-item{background:var(--light);border:1px solid var(--border);border-radius:6px;padding:12px 16px;margin-bottom:10px;}
+  .vocab-item .num{color:var(--orange);font-weight:700;margin-right:6px;}
+  .vocab-item .sentence{margin-bottom:8px;line-height:1.6;}
+  .vocab-item .keyword{color:var(--navy);font-weight:700;text-decoration:underline dotted;}
+  .vocab-item .options{display:flex;flex-wrap:wrap;gap:8px;}
+  .vocab-item .opt-btn{padding:5px 14px;border:1px solid var(--blue);background:white;border-radius:20px;cursor:pointer;font-size:12px;color:var(--blue);transition:all .15s;}
+  .vocab-item .opt-btn:hover{background:var(--blue);color:white;}
+  .vocab-item .opt-btn.selected{background:var(--blue);color:white;font-weight:600;}
+  .gist-q{font-weight:600;margin-bottom:12px;}
+  .mc-option{display:flex;align-items:flex-start;gap:10px;padding:9px 14px;margin-bottom:8px;border:1px solid var(--border);border-radius:6px;cursor:pointer;transition:all .15s;background:white;}
+  .mc-option:hover{border-color:var(--blue);background:var(--light);}
+  .mc-option.selected{border-color:var(--blue);background:var(--lblue);}
+  .mc-letter{color:var(--orange);font-weight:700;min-width:20px;}
+  .mc-block{margin-bottom:20px;}
+  .mc-block .mc-q{font-weight:600;margin-bottom:8px;color:var(--navy);}
+  .mc-num{color:var(--orange);font-weight:700;margin-right:4px;}
+  .sa-item{margin-bottom:14px;}
+  .sa-item .stem{font-weight:500;margin-bottom:5px;line-height:1.6;color:var(--navy);}
+  .sa-item input[type=text]{width:100%;padding:7px 10px;border:1px solid var(--border);border-radius:4px;font-family:inherit;font-size:13px;}
+  .sa-item input:focus{outline:none;border-color:var(--blue);}
+  .inf-item{margin-bottom:16px;}
+  .inf-item .stem{font-weight:500;margin-bottom:6px;line-height:1.6;color:var(--navy);}
+  .inf-item textarea{width:100%;min-height:65px;padding:8px 10px;border:1px solid var(--border);border-radius:4px;font-family:inherit;font-size:13px;resize:vertical;}
+  .inf-item textarea:focus{outline:none;border-color:var(--blue);}
+  .midea-box{background:var(--lblue);border:1px solid #b8d4eb;border-radius:6px;padding:12px 16px;margin-bottom:14px;font-weight:600;color:var(--navy);}
+  .support-item{display:flex;align-items:flex-start;gap:10px;padding:9px 14px;margin-bottom:8px;border:1px solid var(--border);border-radius:6px;cursor:pointer;transition:all .15s;background:white;}
+  .support-item:hover{border-color:var(--blue);background:var(--light);}
+  .support-item.selected{border-color:#4C8C4A;background:#E2EFDA;}
+  .support-check{min-width:20px;height:20px;border:2px solid var(--blue);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:12px;color:white;}
+  .support-item.selected .support-check{background:#4C8C4A;border-color:#4C8C4A;}
+  .disc-item{margin-bottom:16px;}
+  .disc-item .disc-num{color:var(--orange);font-weight:700;}
+  .disc-item p{margin-bottom:6px;line-height:1.6;}
+  .disc-item textarea{width:100%;min-height:65px;padding:8px 10px;border:1px solid var(--border);border-radius:4px;font-family:inherit;font-size:13px;resize:vertical;}
+  .disc-item textarea:focus{outline:none;border-color:var(--blue);}
+</style>
+</head>
+<body>
+<header>
+  <h1>🎧 LISTENING PRACTICE — Advanced Level</h1>
+  <p>Units 16 – 18 &nbsp;|&nbsp; Australia &nbsp;•&nbsp; Gambling &nbsp;•&nbsp; The Internet</p>
+</header>
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="showUnit(16)">Unit 16 — Australia</button>
+  <button class="tab-btn"        onclick="showUnit(17)">Unit 17 — Gambling</button>
+  <button class="tab-btn"        onclick="showUnit(18)">Unit 18 — The Internet</button>
+</div>
+
+<!-- ══════════════════════════ UNIT 16 ══════════════════════════ -->
+<div id="unit-16" class="unit-panel active">
+  <div class="unit-banner">UNIT 16 — AUSTRALIA</div>
+
+  <div class="section">
+    <div class="section-bar"><span class="section-icon">🎧</span><span class="section-title">A | PRE-LISTENING</span></div>
+    <div class="instruction">Think about the following questions before you listen. Share your ideas with a partner.</div>
+    <div class="pre-q"><label>1. What do you already know about Australia's geography, climate, or wildlife?</label><textarea placeholder="Write your ideas here..."></textarea></div>
+    <div class="pre-q"><label>2. Why do you think most of a country's population might choose to live near the coast rather than inland?</label><textarea placeholder="Write your ideas here..."></textarea></div>
+  </div>
+
+  <div class="section">
+    <div class="section-bar"><span class="section-icon">📖</span><span class="section-title">B | VOCABULARY PREVIEW — Contextual Definition</span></div>
+    <div class="instruction">Each sentence below is taken from the audio. The key word is underlined. Select the option that best matches its meaning in context.</div>
+    <div class="vocab-item">
+      <span class="num">1.</span><div class="sentence">Despite its <span class="keyword">vast</span> size, Australia does not have a large population.</div>
+      <div class="options">
+        <button class="opt-btn" onclick="selectOpt(this)">A. extremely large in area</button>
+        <button class="opt-btn" onclick="selectOpt(this)">B. difficult to measure accurately</button>
+        <button class="opt-btn" onclick="selectOpt(this)">C. divided into many small regions</button>
+      </div>
+    </div>
+    <div class="vocab-item">
+      <span class="num">2.</span><div class="sentence">The <span class="keyword">remote</span> areas of Australia, known as the "outback", contain several sandy, rocky deserts.</div>
+      <div class="options">
+        <button class="opt-btn" onclick="selectOpt(this)">A. far away from cities, isolated</button>
+        <button class="opt-btn" onclick="selectOpt(this)">B. heavily populated and busy</button>
+        <button class="opt-btn" onclick="selectOpt(this)">C. protected by the government</button>
+      </div>
+    </div>
+    <div class="vocab-item">
+      <span class="num">3.</span><div class="sentence">Although the outback of Australia is a <span class="keyword">harsh</span> place, some parts of it are quite beautiful.</div>
+      <div class="options">
+        <button class="opt-btn" onclick="selectOpt(this)">A. colorful and cheerful</button>
+        <button class="opt-btn" onclick="selectOpt(this)">B. difficult and unpleasant to live in</button>
+        <button class="opt-btn" onclick="selectOpt(this)">C. easy to travel through</button>
+      </div>
+    </div>
+    <div class="vocab-item">
+      <span class="num">4.</span><div class="sentence">Tropical rain forests whose <span class="keyword">exotic</span> trees and flowers are found nowhere else in the world.</div>
+      <div class="options">
+        <button class="opt-btn" onclick="selectOpt(this)">A. common and ordinary</button>
+        <button class="opt-btn" onclick="selectOpt(this)">B. artificially grown or planted</button>
+        <button class="opt-btn" onclick="selectOpt(this)">C. unusual and striking because it comes from a distant place</button>
+      </div>
+    </div>
+    <div class="vocab-item">
+      <span class="num">5.</span><div class="sentence">This area is covered in thick, <span class="keyword">lush</span> vegetation.</div>
+      <div class="options">
+        <button class="opt-btn" onclick="selectOpt(this)">A. growing thickly and healthily</button>
+        <button class="opt-btn" onclick="selectOpt(this)">B. dry and dying</button>
+        <button class="opt-btn" onclick="selectOpt(this)">C. artificially watered by machines</button>
+      </div>
+    </div>
+    <div class="vocab-item">
+      <span class="num">6.</span><div class="sentence">Located in the southern <span class="keyword">hemisphere</span>, between the Pacific and Indian oceans.</div>
+      <div class="options">
+        <button class="opt-btn" onclick="selectOpt(this)">A. one half of the Earth, usually divided by the equator</button>
+        <button class="opt-btn" onclick="selectOpt(this)">B. a small chain of tropical islands</button>
+        <button class="opt-btn" onclick="selectOpt(this)">C. a type of ocean current</button>
+      </div>
+    </div>
+    <div class="vocab-item">
+      <span class="num">7.</span><div class="sentence">Some parts of the outback receive somewhat more rainfall, and can support some grassy <span class="keyword">vegetation</span>.</div>
+      <div class="options">
+        <button class="opt-btn" onclick="selectOpt(this)">A. plants in general, especially those found in a particular area</button>
+        <button class="opt-btn" onclick="selectOpt(this)">B. underground water supplies</button>
+        <button class="opt-btn" onclick="selectOpt(this)">C. livestock raised for meat or wool</button>
+      </div>
+    </div>
+    <div class="vocab-item">
+      <span class="num">8.</span><div class="sentence">Many of the plant and animal <span class="keyword">species</span> in Australia are very different from those in other parts of the world.</div>
+      <div class="options">
+        <button class="opt-btn" onclick="selectOpt(this)">A. a group of living organisms sharing common characteristics</button>
+        <button class="opt-btn" onclick="selectOpt(this)">B. a specific region or territory</button>
+        <button class="opt-btn" onclick="selectOpt(this)">C. a type of scientific measurement</button>
+      </div>
+    </div>
+    <div class="vocab-item">
+      <span class="num">9.</span><div class="sentence">Marsupials give birth to <span class="keyword">offspring</span> that are not yet well developed.</div>
+      <div class="options">
+        <button class="opt-btn" onclick="selectOpt(this)">A. the young of an animal or person</button>
+        <button class="opt-btn" onclick="selectOpt(this)">B. a fully grown adult animal</button>
+        <button class="opt-btn" onclick="selectOpt(this)">C. a nest or den built for shelter</button>
+      </div>
+    </div>
+    <div class="vocab-item">
+      <span class="num">10.</span><div class="sentence">A coral reef is a <span class="keyword">structure</span> that consists of the bodies of small underwater animals called coral.</div>
+      <div class="options">
+        <button class="opt-btn" onclick="selectOpt(this)">A. something built or formed from many connected parts</button>
+        <button class="opt-btn" onclick="selectOpt(this)">B. a single, simple living cell</button>
+        <button class="opt-btn" onclick="selectOpt(this)">C. a type of ocean current</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-bar"><span class="section-icon">▶</span><span class="section-title">C | FIRST LISTEN — Gist</span></div>
+    <div class="instruction">Play the audio ONCE. Do not take notes. Then select the statement that best describes the main idea.</div>
+    <div class="gist-q">What is this listening mainly about?</div>
+    <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">A)</span><span>A guide to the best tourist attractions in the city of Sydney</span></div>
+    <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">B)</span><span>Australia's unique geography, climate contrasts, and wildlife shaped by its long isolation</span></div>
+    <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">C)</span><span>A comparison between the economies of Australia and the United States</span></div>
+  </div>
+
+  <div class="section">
+    <div class="section-bar"><span class="section-icon">✔</span><span class="section-title">D | MULTIPLE CHOICE — Detail Questions</span></div>
+    <div class="instruction">Listen again. Choose the best answer to each question.</div>
+
+    <div class="mc-block">
+      <div class="mc-q"><span class="mc-num">1.</span>Why do most Australians live near the ocean?</div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">A)</span><span>Because fishing is the country's main industry</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">B)</span><span>Because the interior of the country is extremely dry</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">C)</span><span>Because the government requires coastal living</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">D)</span><span>Because the interior has too many dangerous animals</span></div>
+    </div>
+
+    <div class="mc-block">
+      <div class="mc-q"><span class="mc-num">2.</span>What is Uluru?</div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">A)</span><span>A tropical rainforest on the northern coast</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">B)</span><span>A type of marsupial found only in Australia</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">C)</span><span>A large red rock standing in the middle of the desert</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">D)</span><span>A coral reef off the northeast coast</span></div>
+    </div>
+
+    <div class="mc-block">
+      <div class="mc-q"><span class="mc-num">3.</span>Why are Australia's plants and animals so different from those in other parts of the world?</div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">A)</span><span>Farmers deliberately bred unique species</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">B)</span><span>Most species were brought in by early explorers</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">C)</span><span>Australia has an unusually hot climate year-round</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">D)</span><span>Australia was separated from the rest of the world for millions of years</span></div>
+    </div>
+
+    <div class="mc-block">
+      <div class="mc-q"><span class="mc-num">4.</span>What is unique about how marsupials give birth?</div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">A)</span><span>Their offspring are not yet well developed and often continue developing in a pouch</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">B)</span><span>They lay eggs like birds</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">C)</span><span>Their offspring are fully developed at birth</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">D)</span><span>They give birth only once every ten years</span></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-bar"><span class="section-icon">✏️</span><span class="section-title">E | SHORT-ANSWER — Detail Questions</span></div>
+    <div class="instruction">Answer each question in a few words, based on what you hear.</div>
+    <div class="sa-item"><div class="stem"><span class="mc-num">1.</span>About how many people lived in Australia in the year 2000?</div><input type="text" placeholder="Type your answer..."></div>
+    <div class="sa-item"><div class="stem"><span class="mc-num">2.</span>What structure beneath the ocean is created by the dead bodies of tiny coral animals?</div><input type="text" placeholder="Type your answer..."></div>
+    <div class="sa-item"><div class="stem"><span class="mc-num">3.</span>Name the two marsupials described in detail in the passage.</div><input type="text" placeholder="Type your answer..."></div>
+  </div>
+
+  <div class="section">
+    <div class="section-bar"><span class="section-icon">🔎</span><span class="section-title">F | INFERENCE QUESTIONS</span></div>
+    <div class="instruction">These answers are not stated directly. Use what you heard to reason out a likely answer.</div>
+    <div class="inf-item"><div class="stem"><span class="mc-num">1.</span>Based on the passage, why might tourists be especially drawn to Uluru despite it being located in a "harsh" desert?</div><textarea placeholder="Your answer..."></textarea></div>
+    <div class="inf-item"><div class="stem"><span class="mc-num">2.</span>What can you infer about why Australia's wildlife attracts so much scientific and touristic interest compared to other countries?</div><textarea placeholder="Your answer..."></textarea></div>
+  </div>
+
+  <div class="section">
+    <div class="section-bar"><span class="section-icon">🧩</span><span class="section-title">G | MAIN IDEA vs. SUPPORTING DETAILS</span></div>
+    <div class="instruction">Below is the main idea of the listening. Click on every statement that is a supporting detail for it (some statements are true but do not support this particular main idea).</div>
+    <div class="midea-box">Main idea: Because Australia was isolated from the rest of the world for millions of years, it developed extreme geographic contrasts and species — like marsupials — found nowhere else.</div>
+    <div class="support-item" onclick="toggleSupport(this)"><span class="support-check">✓</span><span>Millions of years of isolation allowed unique species such as kangaroos and koalas to evolve.</span></div>
+    <div class="support-item" onclick="toggleSupport(this)"><span class="support-check">✓</span><span>The outback's dry deserts contrast sharply with the lush rainforests of the north coast.</span></div>
+    <div class="support-item" onclick="toggleSupport(this)"><span class="support-check">✓</span><span>The Great Barrier Reef is a coral structure found off the northeast coast, unlike anywhere else.</span></div>
+    <div class="support-item" onclick="toggleSupport(this)"><span class="support-check">✓</span><span>Most Australians live within a short distance of the ocean.</span></div>
+  </div>
+
+  <div class="section">
+    <div class="section-bar"><span class="section-icon">💬</span><span class="section-title">H | POST-LISTENING DISCUSSION</span></div>
+    <div class="instruction">Discuss with a partner or group. You may also write your thoughts below.</div>
+    <div class="disc-item"><p><span class="disc-num">1.</span> Tourism to remote, harsh places like Uluru is popular worldwide. Why do people find beauty in extreme or unusual landscapes?</p><textarea placeholder="Your thoughts..."></textarea></div>
+    <div class="disc-item"><p><span class="disc-num">2.</span> Marsupials like kangaroos and koalas exist almost nowhere else because of Australia's long isolation. What other examples do you know of species or cultures that developed uniquely because of geographic isolation?</p><textarea placeholder="Your thoughts..."></textarea></div>
+    <div class="disc-item"><p><span class="disc-num">3.</span> Australia's population is concentrated near the coasts despite its huge size. What factors do you think generally determine where people choose to live within a country?</p><textarea placeholder="Your thoughts..."></textarea></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════ UNIT 17 ══════════════════════════ -->
+<div id="unit-17" class="unit-panel">
+  <div class="unit-banner">UNIT 17 — GAMBLING</div>
+
+  <div class="section">
+    <div class="section-bar"><span class="section-icon">🎧</span><span class="section-title">A | PRE-LISTENING</span></div>
+    <div class="instruction">Think about the following questions before you listen. Share your ideas with a partner.</div>
+    <div class="pre-q"><label>1. What do you already know about legalized gambling and casinos in different countries?</label><textarea placeholder="Write your ideas here..."></textarea></div>
+    <div class="pre-q"><label>2. Do you think governments should be involved in an industry like gambling? Why or why not?</label><textarea placeholder="Write your ideas here..."></textarea></div>
+  </div>
+
+  <div class="section">
+    <div class="section-bar"><span class="section-icon">📖</span><span class="section-title">B | VOCABULARY PREVIEW — Contextual Definition</span></div>
+    <div class="instruction">Each sentence is taken from the audio. The key word is underlined. Select the option that best matches its meaning in context.</div>
+    <div class="vocab-item">
+      <span class="num">1.</span><div class="sentence">Many governments have turned to legalized gambling as a way to increase <span class="keyword">revenues</span>.</div>
+      <div class="options">
+        <button class="opt-btn" onclick="selectOpt(this)">A. income that a government or business receives</button>
+        <button class="opt-btn" onclick="selectOpt(this)">B. laws passed by a parliament</button>
+        <button class="opt-btn" onclick="selectOpt(this)">C. buildings used for public entertainment</button>
+      </div>
+    </div>
+    <div class="vocab-item">
+      <span class="num">2.</span><div class="sentence">People become <span class="keyword">addicted</span> to gambling and play until they are broke.</div>
+      <div class="options">
+        <button class="opt-btn" onclick="selectOpt(this)">A. skilled and highly successful at something</span></button>
+        <button class="opt-btn" onclick="selectOpt(this)">B. unable to stop doing something harmful, dependent on it</button>
+        <button class="opt-btn" onclick="selectOpt(this)">C. legally banned from doing something</button>
+      </div>
+    </div>
+    <div class="vocab-item">
+      <span class="num">3.</span><div class="sentence">The thought of winning the <span class="keyword">jackpot</span> is very attractive to them.</div>
+      <div class="options">
+        <button class="opt-btn" onclick="selectOpt(this)">A. a small consolation prize</button>
+        <button class="opt-btn" onclick="selectOpt(this)">B. a free ticket to an event</button>
+        <button class="opt-btn" onclick="selectOpt(this)">C. a large prize of money, especially in gambling</button>
+      </div>
+    </div>
+    <div class="vocab-item">
+      <span class="num">4.</span><div class="sentence">They had to sell their house to pay their gambling <span class="keyword">debts</span>.</div>
+      <div class="options">
+        <button class="opt-btn" onclick="selectOpt(this)">A. money that is owed to someone</button>
+        <button class="opt-btn" onclick="selectOpt(this)">B. taxes collected by the government</button>
+        <button class="opt-btn" onclick="selectOpt(this)">C. tickets purchased for a lottery</button>
+      </div>
+    </div>
+    <div class="vocab-item">
+      <span class="num">5.</span><div class="sentence">Large casinos are often considered good for areas with high <span class="keyword">unemployment</span>.</div>
+      <div class="options">
+        <button class="opt-btn" onclick="selectOpt(this)">A. crime rates</button>
+        <button class="opt-btn" onclick="selectOpt(this)">B. the state of not having a paid job</button>
+        <button class="opt-btn" onclick="selectOpt(this)">C. population growth</button>
+      </div>
+    </div>
+    <div class="vocab-item">
+      <span class="num">6.</span><div class="sentence"><span class="keyword">Opponents</span> of gambling point to problems associated with it.</div>
+      <div class="options">
+        <button class="opt-btn" onclick="selectOpt(this)">A. people who support and promote something</button>
+        <button class="opt-btn" onclick="selectOpt(this)">B. people who are against something and disagree with it</button>
+        <button class="opt-btn" onclick="selectOpt(this)">C. government officials who write laws</button>
+      </div>
+    </div>
+    <div class="vocab-item">
+      <span class="num">7.</span><div class="sentence">People become addicted to gambling and play until they are <span class="keyword">broke</span>.</div>
+      <div class="options">
+        <button class="opt-btn" onclick="selectOpt(this)">A. extremely wealthy</button>
+        <button class="opt-btn" onclick="selectOpt(this)">B. physically injured</button>
+        <button class="opt-btn" onclick="selectOpt(this)">C. having no money left</button>
+      </div>
+    </div>
+    <div class="vocab-item">
+      <span class="num">8.</span><div class="sentence"><span class="keyword">Stress</span> is put on families when one member gambles, and the grocery and rent money are spent.</div>
+      <div class="options">
+        <button class="opt-btn" onclick="selectOpt(this)">A. mental or emotional strain and pressure</button>
+        <button class="opt-btn" onclick="selectOpt(this)">B. a legal penalty or fine</button>
+        <button class="opt-btn" onclick="selectOpt(this)">C. a formal celebration</button>
+      </div>
+    </div>
+    <div class="vocab-item">
+      <span class="num">9.</span><div class="sentence">People who find gambling exciting feel they have to go back for that "high," driven by the <span class="keyword">urge</span> to gamble.</div>
+      <div class="options">
+        <button class="opt-btn" onclick="selectOpt(this)">A. a strong desire or impulse to do something</button>
+        <button class="opt-btn" onclick="selectOpt(this)">B. a formal invitation</button>
+        <button class="opt-btn" onclick="selectOpt(this)">C. a small amount of money</button>
+      </div>
+    </div>
+    <div class="vocab-item">
+      <span class="num">10.</span><div class="sentence">People may benefit if the casino is a <span class="keyword">notable</span> tourist attraction.</div>
+      <div class="options">
+        <button class="opt-btn" onclick="selectOpt(this)">A. hidden and hard to find</button>
+        <button class="opt-btn" onclick="selectOpt(this)">B. important or remarkable enough to be noticed</button>
+        <button class="opt-btn" onclick="selectOpt(this)">C. illegal in most countries</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-bar"><span class="section-icon">▶</span><span class="section-title">C | FIRST LISTEN — Gist</span></div>
+    <div class="instruction">Play the audio ONCE. Do not take notes. Then select the statement that best describes the main idea.</div>
+    <div class="gist-q">What is this listening mainly about?</div>
+    <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">A)</span><span>A step-by-step guide on how to win at casino games</span></div>
+    <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">B)</span><span>A history of organized crime in the twentieth century</span></div>
+    <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">C)</span><span>The arguments for and against legalized gambling as a source of government revenue, and its social costs</span></div>
+  </div>
+
+  <div class="section">
+    <div class="section-bar"><span class="section-icon">✔</span><span class="section-title">D | MULTIPLE CHOICE — Detail Questions</span></div>
+    <div class="instruction">Listen again. Choose the best answer to each question.</div>
+
+    <div class="mc-block">
+      <div class="mc-q"><span class="mc-num">1.</span>Why have many governments turned to legalized gambling?</div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">A)</span><span>To reduce crime rates in urban areas</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">B)</span><span>To increase revenue without raising unpopular taxes</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">C)</span><span>To provide free entertainment to citizens</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">D)</span><span>To comply with international law</span></div>
+    </div>
+
+    <div class="mc-block">
+      <div class="mc-q"><span class="mc-num">2.</span>According to the passage, when does a casino most benefit the local economy?</div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">A)</span><span>When it primarily serves local residents</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">B)</span><span>When ticket prices are very low</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">C)</span><span>When it attracts large numbers of outside tourists who spend money there</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">D)</span><span>When it operates without any government oversight</span></div>
+    </div>
+
+    <div class="mc-block">
+      <div class="mc-q"><span class="mc-num">3.</span>Why is gambling especially attractive to older or retired people?</div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">A)</span><span>Casinos offer them free meals</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">B)</span><span>They are required to gamble by law</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">C)</span><span>They receive special discounts unavailable to younger people</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">D)</span><span>They see winning the jackpot as an appealing way to gain money they otherwise couldn't earn</span></div>
+    </div>
+
+    <div class="mc-block">
+      <div class="mc-q"><span class="mc-num">4.</span>What does the passage suggest is one reason gambling remains connected to crime, even under government regulation?</div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">A)</span><span>Governments secretly encourage criminal activity</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">B)</span><span>Casinos are usually located far from police stations</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">C)</span><span>Many skilled gamblers and administrators learned their trade outside of the law</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">D)</span><span>Gambling is completely unregulated everywhere</span></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-bar"><span class="section-icon">✏️</span><span class="section-title">E | SHORT-ANSWER — Detail Questions</span></div>
+    <div class="instruction">Answer each question in a few words, based on what you hear.</div>
+    <div class="sa-item"><div class="stem"><span class="mc-num">1.</span>What two forms of crime does the passage say increase alongside gambling?</div><input type="text" placeholder="Type your answer..."></div>
+    <div class="sa-item"><div class="stem"><span class="mc-num">2.</span>What did the couple in the passage's example have to sell to pay off their gambling debts?</div><input type="text" placeholder="Type your answer..."></div>
+    <div class="sa-item"><div class="stem"><span class="mc-num">3.</span>Who do casinos run buses for, in order to bring in more customers?</div><input type="text" placeholder="Type your answer..."></div>
+  </div>
+
+  <div class="section">
+    <div class="section-bar"><span class="section-icon">🔎</span><span class="section-title">F | INFERENCE QUESTIONS</span></div>
+    <div class="instruction">These answers are not stated directly. Use what you heard to reason out a likely answer.</div>
+    <div class="inf-item"><div class="stem"><span class="mc-num">1.</span>Based on the passage, why might the government's role in promoting gambling be seen as a conflict of interest?</div><textarea placeholder="Your answer..."></textarea></div>
+    <div class="inf-item"><div class="stem"><span class="mc-num">2.</span>What can you infer about why the passage's author seems cautious rather than fully supportive of legalized gambling?</div><textarea placeholder="Your answer..."></textarea></div>
+  </div>
+
+  <div class="section">
+    <div class="section-bar"><span class="section-icon">🧩</span><span class="section-title">G | MAIN IDEA vs. SUPPORTING DETAILS</span></div>
+    <div class="instruction">Below is the main idea of the listening. Click on every statement that is a supporting detail for it (some statements are true but do not support this particular main idea).</div>
+    <div class="midea-box">Main idea: Legalized gambling brings governments revenue and offers people entertainment, but it also carries serious social and financial risks, especially for vulnerable groups.</div>
+    <div class="support-item" onclick="toggleSupport(this)"><span class="support-check">✓</span><span>Gambling can lead to addiction, family stress, and crushing debt.</span></div>
+    <div class="support-item" onclick="toggleSupport(this)"><span class="support-check">✓</span><span>Casinos are often built in areas of high unemployment as an economic strategy.</span></div>
+    <div class="support-item" onclick="toggleSupport(this)"><span class="support-check">✓</span><span>Older, retired people are specifically targeted through casino buses from retirement homes.</span></div>
+    <div class="support-item" onclick="toggleSupport(this)"><span class="support-check">✓</span><span>New casinos typically include slot machines, blackjack tables, and roulette wheels.</span></div>
+  </div>
+
+  <div class="section">
+    <div class="section-bar"><span class="section-icon">💬</span><span class="section-title">H | POST-LISTENING DISCUSSION</span></div>
+    <div class="instruction">Discuss with a partner or group. You may also write your thoughts below.</div>
+    <div class="disc-item"><p><span class="disc-num">1.</span> The passage mentions couples leaving children locked in cars for hours while gambling. What responsibility, if any, should casinos have for preventing this kind of harm?</p><textarea placeholder="Your thoughts..."></textarea></div>
+    <div class="disc-item"><p><span class="disc-num">2.</span> Should governments profit from an activity, like gambling, that is known to create addiction? Why or why not?</p><textarea placeholder="Your thoughts..."></textarea></div>
+    <div class="disc-item"><p><span class="disc-num">3.</span> The passage says gambling benefits an area most when the money comes from outside visitors rather than local residents. Can you think of other industries where this same principle applies?</p><textarea placeholder="Your thoughts..."></textarea></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════ UNIT 18 ══════════════════════════ -->
+<div id="unit-18" class="unit-panel">
+  <div class="unit-banner">UNIT 18 — THE INTERNET</div>
+
+  <div class="section">
+    <div class="section-bar"><span class="section-icon">🎧</span><span class="section-title">A | PRE-LISTENING</span></div>
+    <div class="instruction">Think about the following questions before you listen. Share your ideas with a partner.</div>
+    <div class="pre-q"><label>1. What do you already know about the early history of computers and the Internet?</label><textarea placeholder="Write your ideas here..."></textarea></div>
+    <div class="pre-q"><label>2. What are some of the benefits and dangers of using the Internet in daily life?</label><textarea placeholder="Write your ideas here..."></textarea></div>
+  </div>
+
+  <div class="section">
+    <div class="section-bar"><span class="section-icon">📖</span><span class="section-title">B | VOCABULARY PREVIEW — Contextual Definition</span></div>
+    <div class="instruction">Each sentence is taken from the audio. The key word is underlined. Select the option that best matches its meaning in context.</div>
+    <div class="vocab-item">
+      <span class="num">1.</span><div class="sentence">The first working computers in the 1950s and 1960s were large <span class="keyword">mainframe</span> machines.</div>
+      <div class="options">
+        <button class="opt-btn" onclick="selectOpt(this)">A. portable, handheld devices</button>
+        <button class="opt-btn" onclick="selectOpt(this)">B. a large, powerful central computer that other computers can link to</button>
+        <button class="opt-btn" onclick="selectOpt(this)">C. a type of computer virus</button>
+      </div>
+    </div>
+    <div class="vocab-item">
+      <span class="num">2.</span><div class="sentence"><span class="keyword">Standards</span> were developed that describe how data was to be transferred between computers.</div>
+      <div class="options">
+        <button class="opt-btn" onclick="selectOpt(this)">A. agreed and established ways of doing something</button>
+        <button class="opt-btn" onclick="selectOpt(this)">B. laws passed by international courts</button>
+        <button class="opt-btn" onclick="selectOpt(this)">C. prices charged for Internet access</button>
+      </div>
+    </div>
+    <div class="vocab-item">
+      <span class="num">3.</span><div class="sentence">Private agencies acted as <span class="keyword">hosts</span> for Internet usage.</div>
+      <div class="options">
+        <button class="opt-btn" onclick="selectOpt(this)">A. computers that provide services or data to other computers on a network</button>
+        <button class="opt-btn" onclick="selectOpt(this)">B. government departments that regulate technology</button>
+        <button class="opt-btn" onclick="selectOpt(this)">C. companies that manufacture computer hardware</button>
+      </div>
+    </div>
+    <div class="vocab-item">
+      <span class="num">4.</span><div class="sentence">Now data can be transferred great distances almost <span class="keyword">instantaneously</span>.</div>
+      <div class="options">
+        <button class="opt-btn" onclick="selectOpt(this)">A. happening immediately, without delay</button>
+        <button class="opt-btn" onclick="selectOpt(this)">B. after a long processing delay</button>
+        <button class="opt-btn" onclick="selectOpt(this)">C. only during certain hours of the day</button>
+      </div>
+    </div>
+    <div class="vocab-item">
+      <span class="num">5.</span><div class="sentence">It's up to individual users to follow computer <span class="keyword">etiquette</span>.</div>
+      <div class="options">
+        <button class="opt-btn" onclick="selectOpt(this)">A. software installation steps</button>
+        <button class="opt-btn" onclick="selectOpt(this)">B. the accepted rules of behavior in a particular situation</button>
+        <button class="opt-btn" onclick="selectOpt(this)">C. technical repair procedures</button>
+      </div>
+    </div>
+    <div class="vocab-item">
+      <span class="num">6.</span><div class="sentence">The need to transfer data from one computer to another became a <span class="keyword">concern</span>.</div>
+      <div class="options">
+        <button class="opt-btn" onclick="selectOpt(this)">A. a matter of interest or worry that requires attention</button>
+        <button class="opt-btn" onclick="selectOpt(this)">B. a type of computer hardware</button>
+        <button class="opt-btn" onclick="selectOpt(this)">C. a financial cost or fee</button>
+      </div>
+    </div>
+    <div class="vocab-item">
+      <span class="num">7.</span><div class="sentence">A common language for commands and communications <span class="keyword">emerged</span>.</div>
+      <div class="options">
+        <button class="opt-btn" onclick="selectOpt(this)">A. disappeared completely</button>
+        <button class="opt-btn" onclick="selectOpt(this)">B. came into existence, became apparent</button>
+        <button class="opt-btn" onclick="selectOpt(this)">C. was made illegal</button>
+      </div>
+    </div>
+    <div class="vocab-item">
+      <span class="num">8.</span><div class="sentence"><span class="keyword">Interactive</span> means that readers could click on items on the web page and get more information.</div>
+      <div class="options">
+        <button class="opt-btn" onclick="selectOpt(this)">A. allowing two-way exchange between a user and a system</button>
+        <button class="opt-btn" onclick="selectOpt(this)">B. printed on paper rather than shown on screen</button>
+        <button class="opt-btn" onclick="selectOpt(this)">C. available only to government employees</button>
+      </div>
+    </div>
+    <div class="vocab-item">
+      <span class="num">9.</span><div class="sentence">Since the Internet is not closely <span class="keyword">regulated</span>, it's up to individual users to follow computer etiquette.</div>
+      <div class="options">
+        <button class="opt-btn" onclick="selectOpt(this)">A. controlled by rules or laws</button>
+        <button class="opt-btn" onclick="selectOpt(this)">B. connected by wires or cables</button>
+        <button class="opt-btn" onclick="selectOpt(this)">C. available at no cost</button>
+      </div>
+    </div>
+    <div class="vocab-item">
+      <span class="num">10.</span><div class="sentence">There are also <span class="keyword">aggressive</span>, pornography salesmen, not to mention people who want to kill your computer with viruses.</div>
+      <div class="options">
+        <button class="opt-btn" onclick="selectOpt(this)">A. calm and easily ignored</button>
+        <button class="opt-btn" onclick="selectOpt(this)">B. forceful and pushy</button>
+        <button class="opt-btn" onclick="selectOpt(this)">C. legally licensed</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-bar"><span class="section-icon">▶</span><span class="section-title">C | FIRST LISTEN — Gist</span></div>
+    <div class="instruction">Play the audio ONCE. Do not take notes. Then select the statement that best describes the main idea.</div>
+    <div class="gist-q">What is this listening mainly about?</div>
+    <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">A)</span><span>A technical manual for building a personal computer</span></div>
+    <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">B)</span><span>A comparison of different email service providers</span></div>
+    <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">C)</span><span>The history and rapid growth of the Internet, and both its benefits and its risks</span></div>
+  </div>
+
+  <div class="section">
+    <div class="section-bar"><span class="section-icon">✔</span><span class="section-title">D | MULTIPLE CHOICE — Detail Questions</span></div>
+    <div class="instruction">Listen again. Choose the best answer to each question.</div>
+
+    <div class="mc-block">
+      <div class="mc-q"><span class="mc-num">1.</span>What was the original purpose of the first computers in the 1950s and 1960s?</div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">A)</span><span>To connect people through email</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">B)</span><span>To create interactive, multi-media web pages</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">C)</span><span>To handle specific tasks, like payroll, for governments and businesses</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">D)</span><span>To play video games</span></div>
+    </div>
+
+    <div class="mc-block">
+      <div class="mc-q"><span class="mc-num">2.</span>What happened to the number of Internet hosts between 1982 and 1986?</div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">A)</span><span>It stayed roughly the same</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">B)</span><span>It decreased significantly</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">C)</span><span>It reached several million</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">D)</span><span>It grew from 213 to 2,300</span></div>
+    </div>
+
+    <div class="mc-block">
+      <div class="mc-q"><span class="mc-num">3.</span>According to the passage, what was one consequence of the Soviet Union falling behind in computer technology?</div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">A)</span><span>It caused a war with the United States</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">B)</span><span>It contributed to the collapse of the Soviet Union in 1989</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">C)</span><span>It led to an international ban on computers</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">D)</span><span>It had no significant effect</span></div>
+    </div>
+
+    <div class="mc-block">
+      <div class="mc-q"><span class="mc-num">4.</span>What changed about web pages during the 1990s?</div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">A)</span><span>They became purely text-based for the first time</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">B)</span><span>They were restricted to government use only</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">C)</span><span>They were banned from including any images</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">D)</span><span>They became interactive and multi-media, with graphics, video, and audio</span></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-bar"><span class="section-icon">✏️</span><span class="section-title">E | SHORT-ANSWER — Detail Questions</span></div>
+    <div class="instruction">Answer each question in a few words, based on what you hear.</div>
+    <div class="sa-item"><div class="stem"><span class="mc-num">1.</span>In what year did the U.S. government sponsor a program to explore data transfer between computers?</div><input type="text" placeholder="Type your answer..."></div>
+    <div class="sa-item"><div class="stem"><span class="mc-num">2.</span>Name one operating system mentioned in the passage.</div><input type="text" placeholder="Type your answer..."></div>
+    <div class="sa-item"><div class="stem"><span class="mc-num">3.</span>Besides viruses and scams, what other harmful use of the Internet does the passage mention?</div><input type="text" placeholder="Type your answer..."></div>
+  </div>
+
+  <div class="section">
+    <div class="section-bar"><span class="section-icon">🔎</span><span class="section-title">F | INFERENCE QUESTIONS</span></div>
+    <div class="instruction">These answers are not stated directly. Use what you heard to reason out a likely answer.</div>
+    <div class="inf-item"><div class="stem"><span class="mc-num">1.</span>Based on the passage, why might businesses feel the need to "control employees using the net during working hours"?</div><textarea placeholder="Your answer..."></textarea></div>
+    <div class="inf-item"><div class="stem"><span class="mc-num">2.</span>What can you infer about the author's overall attitude toward the Internet, despite listing several of its dangers?</div><textarea placeholder="Your answer..."></textarea></div>
+  </div>
+
+  <div class="section">
+    <div class="section-bar"><span class="section-icon">🧩</span><span class="section-title">G | MAIN IDEA vs. SUPPORTING DETAILS</span></div>
+    <div class="instruction">Below is the main idea of the listening. Click on every statement that is a supporting detail for it (some statements are true but do not support this particular main idea).</div>
+    <div class="midea-box">Main idea: The Internet evolved rapidly from a small government project into an essential, multimedia tool, bringing both tremendous benefits and new risks.</div>
+    <div class="support-item" onclick="toggleSupport(this)"><span class="support-check">✓</span><span>E-mail allows people to send letters anywhere in the world in seconds at no extra cost.</span></div>
+    <div class="support-item" onclick="toggleSupport(this)"><span class="support-check">✓</span><span>The number of Internet hosts grew from a handful in the 1970s to millions today.</span></div>
+    <div class="support-item" onclick="toggleSupport(this)"><span class="support-check">✓</span><span>The Internet also enables scams, viruses, and harmful content that require user caution.</span></div>
+    <div class="support-item" onclick="toggleSupport(this)"><span class="support-check">✓</span><span>MS-DOS, UNIX, Macintosh, and Windows are examples of operating systems.</span></div>
+  </div>
+
+  <div class="section">
+    <div class="section-bar"><span class="section-icon">💬</span><span class="section-title">H | POST-LISTENING DISCUSSION</span></div>
+    <div class="instruction">Discuss with a partner or group. You may also write your thoughts below.</div>
+    <div class="disc-item"><p><span class="disc-num">1.</span> The passage says some people find computer and Internet use addictive. What signs might indicate someone's Internet use has become a problem?</p><textarea placeholder="Your thoughts..."></textarea></div>
+    <div class="disc-item"><p><span class="disc-num">2.</span> The Internet is described as "not closely regulated." Do you think it should be more strictly regulated? Why or why not?</p><textarea placeholder="Your thoughts..."></textarea></div>
+    <div class="disc-item"><p><span class="disc-num">3.</span> The passage credits the Internet's rise partly with the decline of the Soviet Union. Can you think of other examples where technology has shaped major political or historical events?</p><textarea placeholder="Your thoughts..."></textarea></div>
+  </div>
+</div>
+
+<script>
+function showUnit(num){
+  document.querySelectorAll('.unit-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('unit-'+num).classList.add('active');
+  document.querySelectorAll('.tab-btn')[num-16].classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function selectOpt(btn){
+  btn.closest('.options').querySelectorAll('.opt-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+}
+function selectMC(el){
+  const scope = el.closest('.mc-block') || el.closest('.section');
+  scope.querySelectorAll('.mc-option').forEach(o=>o.classList.remove('selected'));
+  el.classList.add('selected');
+}
+function toggleSupport(el){
+  el.classList.toggle('selected');
+}
+</script>
+</body>
+</html>
