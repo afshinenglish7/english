@@ -1,0 +1,639 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit 3 Exam — Location</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0f2044; --oxford: #001a3a; --gold: #c8963e; --gold-light: #fef3dc;
+  --cream: #f8f6f1; --white: #fff; --gray: #6b7280; --light-gray: #e8e4dc;
+  --text: #1a1a2e; --border: #d4cfc4;
+  --green: #16a34a; --green-bg: #dcfce7;
+  --red: #dc2626; --red-bg: #fee2e2;
+  --blue-bg: #eff6ff; --amber: #d97706; --amber-bg: #fffbeb;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text); font-size: 14px; line-height: 1.7; min-height: 100vh; }
+
+.sticky-bar { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: var(--oxford); padding: 0 24px; height: 52px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 16px rgba(0,0,0,0.3); }
+.sticky-title { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.7); }
+.sticky-title span { color: var(--gold); }
+.sticky-right { display: flex; align-items: center; gap: 12px; }
+.progress-track { width: 130px; height: 5px; background: rgba(255,255,255,0.15); border-radius: 3px; overflow: hidden; }
+.progress-fill { height: 5px; background: var(--gold); border-radius: 3px; transition: width 0.4s ease; }
+.progress-label { font-size: 12px; color: rgba(255,255,255,0.55); }
+.timer { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; padding: 4px 12px; font-size: 13px; font-weight: 600; color: white; font-variant-numeric: tabular-nums; }
+.timer.warn { background: rgba(220,38,38,0.3); border-color: rgba(220,38,38,0.5); color: #fca5a5; }
+
+.main { max-width: 740px; margin: 0 auto; padding: 72px 18px 60px; }
+
+.exam-header { background: var(--navy); border-radius: 16px; overflow: hidden; margin-bottom: 22px; box-shadow: 0 8px 28px rgba(15,32,68,0.22); }
+.header-stripe { background: var(--gold); height: 5px; }
+.header-body { padding: 26px 30px; display: flex; justify-content: space-between; align-items: flex-start; gap: 18px; }
+.unit-tag { font-size: 11px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); margin-bottom: 5px; }
+.exam-title { font-family: 'Playfair Display', serif; font-size: 30px; font-weight: 700; color: white; line-height: 1.1; }
+.exam-sub { font-size: 12.5px; color: rgba(255,255,255,0.45); margin-top: 5px; }
+.header-pills { display: flex; flex-direction: column; gap: 5px; align-items: flex-end; flex-shrink: 0; }
+.pill { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.13); border-radius: 7px; padding: 5px 13px; font-size: 12px; color: rgba(255,255,255,0.65); white-space: nowrap; }
+.pill strong { color: white; }
+
+.info-card { background: white; border-radius: 12px; border: 1px solid var(--border); padding: 20px 22px; margin-bottom: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+.info-card h3 { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray); margin-bottom: 14px; }
+.info-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 14px; }
+.field label { display: block; font-size: 11px; font-weight: 600; color: var(--gray); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 5px; }
+.req-star { color: #ef4444; }
+.field input { width: 100%; padding: 9px 12px; border: 1.5px solid var(--border); border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--text); background: var(--cream); transition: border-color 0.2s; outline: none; }
+.field input:focus { border-color: var(--navy); background: white; }
+.field input.err { border-color: #ef4444; background: #fef2f2; }
+.err-msg { font-size: 11px; color: #ef4444; margin-top: 4px; display: none; }
+.err-msg.show { display: block; }
+
+.instr { background: var(--blue-bg); border: 1px solid #bfdbfe; border-radius: 10px; padding: 12px 16px; margin-bottom: 20px; font-size: 13px; color: #1e3a6e; display: flex; gap: 10px; }
+.instr .ico { font-size: 17px; flex-shrink: 0; margin-top: 1px; }
+
+.section { background: white; border-radius: 14px; border: 1px solid var(--border); overflow: hidden; margin-bottom: 18px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+.sec-head { background: var(--navy); padding: 13px 20px; display: flex; align-items: center; gap: 13px; }
+.sec-badge { width: 34px; height: 34px; border-radius: 50%; background: var(--gold); color: var(--oxford); font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.sec-info { flex: 1; }
+.sec-type { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 1px; }
+.sec-title { font-family: 'Playfair Display', serif; font-size: 15px; color: white; }
+.sec-pts { font-size: 11px; color: rgba(255,255,255,0.4); text-align: right; }
+.sec-pts strong { color: var(--gold); font-size: 15px; display: block; }
+.sec-body { padding: 18px 20px; }
+
+.q { margin-bottom: 18px; padding-bottom: 18px; border-bottom: 1px solid var(--light-gray); }
+.q:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+.q-row { display: flex; gap: 11px; align-items: flex-start; margin-bottom: 10px; }
+.q-num { width: 23px; height: 23px; border-radius: 50%; background: var(--gold-light); color: var(--oxford); font-weight: 700; font-size: 11px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+.q-text { font-size: 14px; color: var(--text); line-height: 1.65; flex: 1; }
+.q-text em { color: var(--gray); font-size: 12.5px; }
+
+/* TRUE / FALSE */
+.tf { display: flex; gap: 10px; padding-left: 34px; }
+.tf-opt { display: flex; align-items: center; gap: 8px; padding: 8px 22px; border: 1.5px solid var(--border); border-radius: 9px; cursor: pointer; transition: all 0.15s; font-size: 13.5px; font-weight: 600; background: var(--cream); user-select: none; }
+.tf-opt:hover { border-color: var(--navy); background: white; }
+.tf-opt.sel-t { border-color: var(--green); background: var(--green-bg); color: var(--green); }
+.tf-opt.sel-f { border-color: var(--red); background: var(--red-bg); color: var(--red); }
+.tf-box { width: 16px; height: 16px; border-radius: 4px; border: 2px solid var(--border); flex-shrink: 0; }
+.tf-opt.sel-t .tf-box { border-color: var(--green); background: var(--green); }
+.tf-opt.sel-f .tf-box { border-color: var(--red); background: var(--red); }
+
+/* FILL */
+.fill-wrap { padding-left: 34px; }
+.fill-input { width: 100%; max-width: 260px; padding: 8px 13px; border: 1.5px solid var(--border); border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--text); background: var(--cream); outline: none; transition: border-color 0.2s; }
+.fill-input:focus { border-color: var(--navy); background: white; }
+.fill-hint { font-size: 11px; color: var(--gray); margin-top: 5px; font-style: italic; }
+
+/* OPEN */
+.open-wrap { padding-left: 34px; }
+.open-textarea { width: 100%; min-height: 105px; padding: 10px 13px; border: 1.5px solid var(--border); border-radius: 9px; font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--text); background: var(--cream); resize: vertical; line-height: 1.7; outline: none; transition: border-color 0.2s; }
+.open-textarea:focus { border-color: var(--navy); background: white; }
+.word-count { font-size: 11px; color: var(--gray); margin-top: 5px; }
+
+.ctx { background: var(--amber-bg); border: 1px solid #fde68a; border-radius: 8px; padding: 11px 15px; font-size: 12.5px; color: #78350f; margin-bottom: 14px; line-height: 1.8; }
+.ctx-lbl { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--amber); display: block; margin-bottom: 4px; }
+
+.submit-zone { background: white; border: 1px solid var(--border); border-radius: 14px; padding: 26px 24px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+.submit-zone p { font-size: 13px; color: var(--gray); margin-bottom: 16px; line-height: 1.6; }
+.submit-btn { background: var(--navy); color: white; border: none; padding: 13px 44px; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 9px; }
+.submit-btn:hover { background: var(--oxford); transform: translateY(-1px); box-shadow: 0 6px 18px rgba(15,32,68,0.28); }
+.submit-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+
+.success { display: none; text-align: center; padding: 56px 28px; background: white; border-radius: 16px; border: 1px solid var(--border); box-shadow: 0 8px 28px rgba(0,0,0,0.08); }
+.success-icon { font-size: 58px; margin-bottom: 18px; }
+.success h2 { font-family: 'Playfair Display', serif; font-size: 26px; color: var(--navy); margin-bottom: 8px; }
+.success p { font-size: 13.5px; color: var(--gray); max-width: 380px; margin: 0 auto; line-height: 1.8; }
+
+@media (max-width: 560px) {
+  .info-grid { grid-template-columns: 1fr; }
+  .header-body { flex-direction: column; }
+  .tf, .fill-wrap, .open-wrap { padding-left: 0; }
+  .progress-track { width: 80px; }
+}
+</style>
+</head>
+<body>
+
+<div class="sticky-bar">
+  <div class="sticky-title">Unit 3 · <span>Location Exam</span></div>
+  <div class="sticky-right">
+    <div class="progress-track"><div class="progress-fill" id="pFill"></div></div>
+    <div class="progress-label" id="pLabel">0 / 25</div>
+    <div class="timer" id="timer">45:00</div>
+  </div>
+</div>
+
+<div class="main" id="examMain">
+
+  <div class="exam-header">
+    <div class="header-stripe"></div>
+    <div class="header-body">
+      <div>
+        <div class="unit-tag">Oxford Business Result · Elementary · Unit 3</div>
+        <div class="exam-title">Location</div>
+        <div class="exam-sub">Workplaces · There is/are · Email &amp; postal addresses · Ordering by phone</div>
+      </div>
+      <div class="header-pills">
+        <div class="pill"><strong>25</strong> Questions</div>
+        <div class="pill"><strong>50</strong> Points</div>
+        <div class="pill"><strong>45</strong> Min</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="info-card">
+    <h3>Your Information</h3>
+    <div class="info-grid">
+      <div class="field">
+        <label>Full Name <span class="req-star">*</span></label>
+        <input type="text" id="sName" placeholder="Enter your full name" oninput="clearErr('sName','nameErr'); updateProgress()">
+        <div class="err-msg" id="nameErr">⚠ Please enter your full name.</div>
+      </div>
+      <div class="field">
+        <label>Class / Group <span class="req-star">*</span></label>
+        <input type="text" id="sClass" placeholder="e.g. A1-B" oninput="clearErr('sClass','classErr'); updateProgress()">
+        <div class="err-msg" id="classErr">⚠ Please enter your class.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="instr">
+    <div class="ico">📋</div>
+    <div>Answer all questions carefully. Use the True/False buttons and text fields. Only questions 24 and 25 require a longer written answer. Click <strong>Submit Exam</strong> when finished — your teacher receives your answers immediately.</div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       SECTION A — TRUE / FALSE (Q1–Q6)
+       Topic: Workplaces & location vocabulary
+  ══════════════════════════════════════ -->
+  <div class="section">
+    <div class="sec-head">
+      <div class="sec-badge">A</div>
+      <div class="sec-info">
+        <div class="sec-type">True or False</div>
+        <div class="sec-title">Working with Words — Workplaces &amp; Location</div>
+      </div>
+      <div class="sec-pts"><strong>12</strong>pts · 2 each</div>
+    </div>
+    <div class="sec-body">
+
+      <div class="q">
+        <div class="q-row"><div class="q-num">1</div>
+          <div class="q-text">A <strong>factory</strong> is the place where a company makes or produces its products.</div>
+        </div>
+        <div class="tf">
+          <label class="tf-opt" onclick="pickTF('q1','True',this)"><div class="tf-box"></div>True</label>
+          <label class="tf-opt" onclick="pickTF('q1','False',this)"><div class="tf-box"></div>False</label>
+        </div>
+      </div>
+
+      <div class="q">
+        <div class="q-row"><div class="q-num">2</div>
+          <div class="q-text">The <strong>head office</strong> is where sales representatives visit customers every day.</div>
+        </div>
+        <div class="tf">
+          <label class="tf-opt" onclick="pickTF('q2','True',this)"><div class="tf-box"></div>True</label>
+          <label class="tf-opt" onclick="pickTF('q2','False',this)"><div class="tf-box"></div>False</label>
+        </div>
+      </div>
+
+      <div class="q">
+        <div class="q-row"><div class="q-num">3</div>
+          <div class="q-text">A <strong>distribution centre</strong> is where products are received and then sent out to customers.</div>
+        </div>
+        <div class="tf">
+          <label class="tf-opt" onclick="pickTF('q3','True',this)"><div class="tf-box"></div>True</label>
+          <label class="tf-opt" onclick="pickTF('q3','False',this)"><div class="tf-box"></div>False</label>
+        </div>
+      </div>
+
+      <div class="q">
+        <div class="q-row"><div class="q-num">4</div>
+          <div class="q-text">LEGO is an American company with its headquarters in New York.</div>
+        </div>
+        <div class="tf">
+          <label class="tf-opt" onclick="pickTF('q4','True',this)"><div class="tf-box"></div>True</label>
+          <label class="tf-opt" onclick="pickTF('q4','False',this)"><div class="tf-box"></div>False</label>
+        </div>
+      </div>
+
+      <div class="q">
+        <div class="q-row"><div class="q-num">5</div>
+          <div class="q-text">"The company has <strong>about</strong> 850 employees" means approximately 850 employees.</div>
+        </div>
+        <div class="tf">
+          <label class="tf-opt" onclick="pickTF('q5','True',this)"><div class="tf-box"></div>True</label>
+          <label class="tf-opt" onclick="pickTF('q5','False',this)"><div class="tf-box"></div>False</label>
+        </div>
+      </div>
+
+      <div class="q">
+        <div class="q-row"><div class="q-num">6</div>
+          <div class="q-text">An <strong>R&amp;D centre</strong> is where the Managing Director and company directors work.</div>
+        </div>
+        <div class="tf">
+          <label class="tf-opt" onclick="pickTF('q6','True',this)"><div class="tf-box"></div>True</label>
+          <label class="tf-opt" onclick="pickTF('q6','False',this)"><div class="tf-box"></div>False</label>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       SECTION B — FILL IN THE BLANK (Q7–Q13)
+       Topic: There is/are + some/any (one word)
+  ══════════════════════════════════════ -->
+  <div class="section">
+    <div class="sec-head">
+      <div class="sec-badge">B</div>
+      <div class="sec-info">
+        <div class="sec-type">Fill in the Blank — One Word Only</div>
+        <div class="sec-title">Language at Work — There is/are &amp; Some/Any</div>
+      </div>
+      <div class="sec-pts"><strong>14</strong>pts · 2 each</div>
+    </div>
+    <div class="sec-body">
+
+      <div class="ctx">
+        <span class="ctx-lbl">📌 Instruction</span>
+        Write one word only: <strong>is · are · isn't · aren't · some · any</strong>
+      </div>
+
+      <div class="q">
+        <div class="q-row"><div class="q-num">7</div>
+          <div class="q-text">There _____ a harbour in Singapore for the import and export of goods by sea.</div>
+        </div>
+        <div class="fill-wrap">
+          <input class="fill-input" type="text" id="q7" placeholder="One word..." oninput="updateProgress()">
+          <div class="fill-hint">Singular noun → is or isn't</div>
+        </div>
+      </div>
+
+      <div class="q">
+        <div class="q-row"><div class="q-num">8</div>
+          <div class="q-text">There _____ hundreds of hotels and large exhibition centres in Singapore.</div>
+        </div>
+        <div class="fill-wrap">
+          <input class="fill-input" type="text" id="q8" placeholder="One word..." oninput="updateProgress()">
+          <div class="fill-hint">Plural noun → are or aren't</div>
+        </div>
+      </div>
+
+      <div class="q">
+        <div class="q-row"><div class="q-num">9</div>
+          <div class="q-text">There _____ any problems with visas for foreign workers in Singapore.</div>
+        </div>
+        <div class="fill-wrap">
+          <input class="fill-input" type="text" id="q9" placeholder="One word..." oninput="updateProgress()">
+          <div class="fill-hint">Negative plural form</div>
+        </div>
+      </div>
+
+      <div class="q">
+        <div class="q-row"><div class="q-num">10</div>
+          <div class="q-text">There _____ a crime problem in Singapore — it's a very safe city.</div>
+        </div>
+        <div class="fill-wrap">
+          <input class="fill-input" type="text" id="q10" placeholder="One word..." oninput="updateProgress()">
+          <div class="fill-hint">Negative singular form</div>
+        </div>
+      </div>
+
+      <div class="q">
+        <div class="q-row"><div class="q-num">11</div>
+          <div class="q-text">There are _____ excellent schools and hospitals in Singapore.</div>
+        </div>
+        <div class="fill-wrap">
+          <input class="fill-input" type="text" id="q11" placeholder="One word..." oninput="updateProgress()">
+          <div class="fill-hint">Positive sentence → some or any?</div>
+        </div>
+      </div>
+
+      <div class="q">
+        <div class="q-row"><div class="q-num">12</div>
+          <div class="q-text">Is there _____ direct flight from the city to the airport conference centre?</div>
+        </div>
+        <div class="fill-wrap">
+          <input class="fill-input" type="text" id="q12" placeholder="One word..." oninput="updateProgress()">
+          <div class="fill-hint">Question → some or any?</div>
+        </div>
+      </div>
+
+      <div class="q">
+        <div class="q-row"><div class="q-num">13</div>
+          <div class="q-text">_____ there a bus to the airport from this hotel?</div>
+        </div>
+        <div class="fill-wrap">
+          <input class="fill-input" type="text" id="q13" placeholder="One word..." oninput="updateProgress()">
+          <div class="fill-hint">Question form of "there is"</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       SECTION C — TRUE / FALSE (Q14–Q18)
+       Topic: Email & postal address symbols
+  ══════════════════════════════════════ -->
+  <div class="section">
+    <div class="sec-head">
+      <div class="sec-badge">C</div>
+      <div class="sec-info">
+        <div class="sec-type">True or False</div>
+        <div class="sec-title">Practically Speaking — Email &amp; Postal Addresses</div>
+      </div>
+      <div class="sec-pts"><strong>10</strong>pts · 2 each</div>
+    </div>
+    <div class="sec-body">
+
+      <div class="q">
+        <div class="q-row"><div class="q-num">14</div>
+          <div class="q-text">In an email address, the symbol <strong>@</strong> is said as "at".</div>
+        </div>
+        <div class="tf">
+          <label class="tf-opt" onclick="pickTF('q14','True',this)"><div class="tf-box"></div>True</label>
+          <label class="tf-opt" onclick="pickTF('q14','False',this)"><div class="tf-box"></div>False</label>
+        </div>
+      </div>
+
+      <div class="q">
+        <div class="q-row"><div class="q-num">15</div>
+          <div class="q-text">In an email address, the symbol <strong>_</strong> is called a "hyphen".</div>
+        </div>
+        <div class="tf">
+          <label class="tf-opt" onclick="pickTF('q15','True',this)"><div class="tf-box"></div>True</label>
+          <label class="tf-opt" onclick="pickTF('q15','False',this)"><div class="tf-box"></div>False</label>
+        </div>
+      </div>
+
+      <div class="q">
+        <div class="q-row"><div class="q-num">16</div>
+          <div class="q-text">In a postal address, the abbreviation <strong>"Rd"</strong> stands for "Road".</div>
+        </div>
+        <div class="tf">
+          <label class="tf-opt" onclick="pickTF('q16','True',this)"><div class="tf-box"></div>True</label>
+          <label class="tf-opt" onclick="pickTF('q16','False',this)"><div class="tf-box"></div>False</label>
+        </div>
+      </div>
+
+      <div class="q">
+        <div class="q-row"><div class="q-num">17</div>
+          <div class="q-text">The address <strong>info@fastshop.com</strong> is read as "info <em>at</em> fastshop <em>dot</em> com".</div>
+        </div>
+        <div class="tf">
+          <label class="tf-opt" onclick="pickTF('q17','True',this)"><div class="tf-box"></div>True</label>
+          <label class="tf-opt" onclick="pickTF('q17','False',this)"><div class="tf-box"></div>False</label>
+        </div>
+      </div>
+
+      <div class="q">
+        <div class="q-row"><div class="q-num">18</div>
+          <div class="q-text">In an email address, the symbol <strong>&amp;</strong> is said as "and".</div>
+        </div>
+        <div class="tf">
+          <label class="tf-opt" onclick="pickTF('q18','True',this)"><div class="tf-box"></div>True</label>
+          <label class="tf-opt" onclick="pickTF('q18','False',this)"><div class="tf-box"></div>False</label>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       SECTION D — FILL IN THE BLANK (Q19–Q23)
+       Topic: Ordering by phone expressions
+  ══════════════════════════════════════ -->
+  <div class="section">
+    <div class="sec-head">
+      <div class="sec-badge">D</div>
+      <div class="sec-info">
+        <div class="sec-type">Fill in the Blank — One Word Only</div>
+        <div class="sec-title">Business Communication — Ordering by Phone</div>
+      </div>
+      <div class="sec-pts"><strong>10</strong>pts · 2 each</div>
+    </div>
+    <div class="sec-body">
+
+      <div class="ctx">
+        <span class="ctx-lbl">📌 Word bank — use each word once</span>
+        <strong>confirm · repeat · order · course · sorry</strong>
+      </div>
+
+      <div class="q">
+        <div class="q-row"><div class="q-num">19</div>
+          <div class="q-text">Can I _____ some whiteboards, please? I need ten of them.</div>
+        </div>
+        <div class="fill-wrap">
+          <input class="fill-input" type="text" id="q19" placeholder="One word..." oninput="updateProgress()">
+          <div class="fill-hint">Asking to buy something</div>
+        </div>
+      </div>
+
+      <div class="q">
+        <div class="q-row"><div class="q-num">20</div>
+          <div class="q-text">Can you _____ my order by email, please?</div>
+        </div>
+        <div class="fill-wrap">
+          <input class="fill-input" type="text" id="q20" placeholder="One word..." oninput="updateProgress()">
+          <div class="fill-hint">Asking for written confirmation</div>
+        </div>
+      </div>
+
+      <div class="q">
+        <div class="q-row"><div class="q-num">21</div>
+          <div class="q-text">Can you _____ that more slowly, please? I didn't hear the product code.</div>
+        </div>
+        <div class="fill-wrap">
+          <input class="fill-input" type="text" id="q21" placeholder="One word..." oninput="updateProgress()">
+          <div class="fill-hint">Asking someone to say something again</div>
+        </div>
+      </div>
+
+      <div class="q">
+        <div class="q-row"><div class="q-num">22</div>
+          <div class="q-text">"Can I have your delivery address?" — "Yes, of _____."</div>
+        </div>
+        <div class="fill-wrap">
+          <input class="fill-input" type="text" id="q22" placeholder="One word..." oninput="updateProgress()">
+          <div class="fill-hint">Saying yes to a request politely</div>
+        </div>
+      </div>
+
+      <div class="q">
+        <div class="q-row"><div class="q-num">23</div>
+          <div class="q-text">"Can you deliver tomorrow?" — "I'm _____, but we can deliver on Thursday."</div>
+        </div>
+        <div class="fill-wrap">
+          <input class="fill-input" type="text" id="q23" placeholder="One word..." oninput="updateProgress()">
+          <div class="fill-hint">Saying no politely to a request</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       SECTION E — OPEN ENDED (Q24–Q25)
+  ══════════════════════════════════════ -->
+  <div class="section">
+    <div class="sec-head">
+      <div class="sec-badge">E</div>
+      <div class="sec-info">
+        <div class="sec-type">Open-Ended Writing</div>
+        <div class="sec-title">Your Company Location &amp; A Phone Order</div>
+      </div>
+      <div class="sec-pts"><strong>4</strong>pts · 2 each</div>
+    </div>
+    <div class="sec-body">
+
+      <div class="q">
+        <div class="q-row"><div class="q-num">24</div>
+          <div class="q-text">
+            Write <strong>3–4 sentences</strong> about your company or a company you know. Describe its locations and workplaces.<br>
+            • Where is the head office / factory / R&amp;D centre?<br>
+            • Are there any sales offices? How many?<br>
+            • Use <em>there is/are</em> and <em>some/any</em>.
+          </div>
+        </div>
+        <div class="open-wrap">
+          <textarea class="open-textarea" id="q24" placeholder="Example: My company has its head office in Mexico City. There are some factories in Europe and Asia. There aren't any distribution centres in South America yet..." oninput="wc('q24','wc24'); updateProgress()"></textarea>
+          <div class="word-count" id="wc24">0 words</div>
+        </div>
+      </div>
+
+      <div class="q">
+        <div class="q-row"><div class="q-num">25</div>
+          <div class="q-text">
+            Write a short phone conversation of <strong>4–5 lines</strong> between a customer and a supplier. Include:<br>
+            • The customer places an order<br>
+            • Asks for the delivery time and address confirmation<br>
+            • The supplier responds and confirms by email<br>
+            <em>Use expressions from this unit: Can I order…? Can you confirm…? Yes, of course. Got it. I'm sorry, but…</em>
+          </div>
+        </div>
+        <div class="open-wrap">
+          <textarea class="open-textarea" id="q25" placeholder="Customer: Can I order some laptops, please?&#10;Supplier: Of course. How many would you like?&#10;Customer: ..." oninput="wc('q25','wc25'); updateProgress()"></textarea>
+          <div class="word-count" id="wc25">0 words</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="submit-zone" id="submitZone">
+    <p>Please review all your answers before submitting.<br>Once submitted, your teacher receives your answers immediately and <strong>you cannot change them</strong>.</p>
+    <button class="submit-btn" id="submitBtn" onclick="submitExam()">📤 &nbsp;Submit Exam</button>
+  </div>
+
+  <div class="success" id="successScreen">
+    <div class="success-icon">✅</div>
+    <h2>Exam Submitted!</h2>
+    <p>Your answers have been sent to your teacher successfully.<br>You will receive your grade and feedback soon.<br><br><strong>Well done! 🎉</strong></p>
+  </div>
+
+</div>
+
+<script>
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwhTHz9nJHkALgFQx44VzQ1osKgre7A9qwyEr47oG3fFaeBVMmsJi0f4mpuc1Gcy59DuA/exec';
+
+let timeLeft = 45 * 60;
+const timerEl = document.getElementById('timer');
+const timerInt = setInterval(() => {
+  timeLeft--;
+  const m = Math.floor(timeLeft / 60), s = timeLeft % 60;
+  timerEl.textContent = `${m}:${s.toString().padStart(2,'0')}`;
+  if (timeLeft <= 300) timerEl.classList.add('warn');
+  if (timeLeft <= 0) { clearInterval(timerInt); submitExam(); }
+}, 1000);
+
+const A = {};
+
+function pickTF(qid, val, el) {
+  el.closest('.tf').querySelectorAll('.tf-opt').forEach(o => o.classList.remove('sel-t','sel-f'));
+  el.classList.add(val === 'True' ? 'sel-t' : 'sel-f');
+  A[qid] = val;
+  updateProgress();
+}
+
+function wc(inputId, countId) {
+  const words = document.getElementById(inputId).value.trim().split(/\s+/).filter(w => w.length).length;
+  document.getElementById(countId).textContent = `${words} word${words !== 1 ? 's' : ''}`;
+}
+
+function updateProgress() {
+  let done = 0;
+  // T/F: q1-q6, q14-q18
+  ['q1','q2','q3','q4','q5','q6','q14','q15','q16','q17','q18'].forEach(q => { if (A[q]) done++; });
+  // Fill: q7-q13, q19-q23
+  ['q7','q8','q9','q10','q11','q12','q13','q19','q20','q21','q22','q23'].forEach(q => { if (document.getElementById(q)?.value.trim()) done++; });
+  // Open: q24-q25
+  ['q24','q25'].forEach(q => { if (document.getElementById(q)?.value.trim()) done++; });
+  document.getElementById('pFill').style.width = (done / 25 * 100) + '%';
+  document.getElementById('pLabel').textContent = `${done} / 25`;
+}
+
+function clearErr(inputId, errId) {
+  document.getElementById(inputId).classList.remove('err');
+  document.getElementById(errId).classList.remove('show');
+}
+
+function getAll() {
+  const g = id => document.getElementById(id)?.value.trim() || '';
+  return {
+    name: document.getElementById('sName').value.trim(),
+    class: document.getElementById('sClass').value.trim(),
+    date: new Date().toLocaleDateString('en-GB'),
+    q1:A.q1||'', q2:A.q2||'', q3:A.q3||'', q4:A.q4||'', q5:A.q5||'', q6:A.q6||'',
+    q7:g('q7'), q8:g('q8'), q9:g('q9'), q10:g('q10'), q11:g('q11'), q12:g('q12'), q13:g('q13'),
+    q14:A.q14||'', q15:A.q15||'', q16:A.q16||'', q17:A.q17||'', q18:A.q18||'',
+    q19:g('q19'), q20:g('q20'), q21:g('q21'), q22:g('q22'), q23:g('q23'),
+    q24:g('q24'), q25:g('q25'),
+    timestamp: new Date().toLocaleString()
+  };
+}
+
+async function submitExam() {
+  const data = getAll();
+  let valid = true;
+  if (!data.name) {
+    document.getElementById('sName').classList.add('err');
+    document.getElementById('nameErr').classList.add('show');
+    valid = false;
+  }
+  if (!data.class) {
+    document.getElementById('sClass').classList.add('err');
+    document.getElementById('classErr').classList.add('show');
+    valid = false;
+  }
+  if (!valid) { window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.innerHTML = '⏳ &nbsp;Submitting...';
+
+  try {
+    const fd = new FormData();
+    Object.entries(data).forEach(([k, v]) => fd.append(k, v));
+    await fetch(SCRIPT_URL, { method: 'POST', body: fd, mode: 'no-cors' });
+    clearInterval(timerInt);
+    document.getElementById('submitZone').style.display = 'none';
+    document.querySelectorAll('.section, .info-card, .instr, .exam-header').forEach(e => e.style.display = 'none');
+    document.getElementById('successScreen').style.display = 'block';
+    document.querySelector('.sticky-bar').style.background = '#166534';
+  } catch (e) {
+    btn.disabled = false;
+    btn.innerHTML = '📤 &nbsp;Submit Exam';
+    alert('Submission failed. Please check your internet connection and try again.');
+  }
+}
+
+updateProgress();
+</script>
+</body>
+</html>
