@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Listening Practice — Units 19–21</title>
+<style>
+  :root {
+    --navy:#1A3557;--blue:#2E6DA4;--orange:#C55A11;
+    --lblue:#D6E4F0;--yellow:#FFF2CC;--white:#FFFFFF;
+    --light:#F7FBFF;--border:#BBBBBB;--text:#1A1A1A;--muted:#555555;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:Calibri,Arial,sans-serif;font-size:13px;background:#edf2f7;color:var(--text);}
+  header{background:var(--navy);color:white;padding:22px 32px 16px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.3);}
+  header h1{font-size:22px;letter-spacing:.5px;}
+  header p{font-size:12px;opacity:.75;margin-top:2px;}
+  .tab-bar{display:flex;gap:4px;background:var(--navy);padding:0 32px 0;border-top:1px solid rgba(255,255,255,.15);}
+  .tab-btn{padding:10px 22px;background:transparent;border:none;border-bottom:3px solid transparent;color:rgba(255,255,255,.65);cursor:pointer;font-size:13px;font-weight:600;transition:all .2s;}
+  .tab-btn:hover{color:white;}
+  .tab-btn.active{color:white;border-bottom-color:var(--orange);}
+  .unit-panel{display:none;max-width:900px;margin:28px auto;padding:0 16px 60px;}
+  .unit-panel.active{display:block;}
+  .unit-banner{background:var(--navy);color:white;padding:16px 24px;border-radius:6px 6px 0 0;font-size:18px;font-weight:700;letter-spacing:.4px;}
+  .section{background:white;border:1px solid var(--border);border-top:none;padding:20px 24px;}
+  .section:last-child{border-radius:0 0 6px 6px;}
+  .section-bar{display:flex;align-items:center;gap:10px;background:var(--lblue);margin:-20px -24px 16px;padding:10px 16px;border-bottom:1px solid #b8d4eb;}
+  .section-icon{color:var(--orange);font-size:15px;font-weight:700;}
+  .section-title{color:var(--navy);font-size:14px;font-weight:700;}
+  .instruction{background:var(--yellow);border-left:3px solid var(--orange);padding:8px 14px;font-style:italic;color:var(--muted);margin-bottom:16px;border-radius:0 4px 4px 0;font-size:12px;}
+  .pre-q{margin-bottom:14px;}
+  .pre-q label{display:block;font-weight:600;color:var(--orange);margin-bottom:6px;}
+  .pre-q textarea{width:100%;min-height:60px;padding:8px 10px;border:1px solid var(--border);border-radius:4px;font-family:inherit;font-size:13px;resize:vertical;color:var(--text);}
+  .pre-q textarea:focus{outline:none;border-color:var(--blue);}
+  .vocab-item{background:var(--light);border:1px solid var(--border);border-radius:6px;padding:12px 16px;margin-bottom:10px;}
+  .vocab-item .num{color:var(--orange);font-weight:700;margin-right:6px;}
+  .vocab-item .sentence{margin-bottom:8px;line-height:1.6;}
+  .vocab-item .keyword{color:var(--navy);font-weight:700;text-decoration:underline dotted;}
+  .vocab-item .options{display:flex;flex-wrap:wrap;gap:8px;}
+  .vocab-item .opt-btn{padding:5px 14px;border:1px solid var(--blue);background:white;border-radius:20px;cursor:pointer;font-size:12px;color:var(--blue);transition:all .15s;}
+  .vocab-item .opt-btn:hover{background:var(--blue);color:white;}
+  .vocab-item .opt-btn.selected{background:var(--blue);color:white;font-weight:600;}
+  .gist-q{font-weight:600;margin-bottom:12px;}
+  .mc-option{display:flex;align-items:flex-start;gap:10px;padding:9px 14px;margin-bottom:8px;border:1px solid var(--border);border-radius:6px;cursor:pointer;transition:all .15s;background:white;}
+  .mc-option:hover{border-color:var(--blue);background:var(--light);}
+  .mc-option.selected{border-color:var(--blue);background:var(--lblue);}
+  .mc-letter{color:var(--orange);font-weight:700;min-width:20px;}
+  .mc-block{margin-bottom:20px;}
+  .mc-block .mc-q{font-weight:600;margin-bottom:8px;color:var(--navy);}
+  .mc-num{color:var(--orange);font-weight:700;margin-right:4px;}
+  .sa-item{margin-bottom:14px;}
+  .sa-item .stem{font-weight:500;margin-bottom:5px;line-height:1.6;color:var(--navy);}
+  .sa-item input[type=text]{width:100%;padding:7px 10px;border:1px solid var(--border);border-radius:4px;font-family:inherit;font-size:13px;}
+  .sa-item input:focus{outline:none;border-color:var(--blue);}
+  .inf-item{margin-bottom:16px;}
+  .inf-item .stem{font-weight:500;margin-bottom:6px;line-height:1.6;color:var(--navy);}
+  .inf-item textarea{width:100%;min-height:65px;padding:8px 10px;border:1px solid var(--border);border-radius:4px;font-family:inherit;font-size:13px;resize:vertical;}
+  .inf-item textarea:focus{outline:none;border-color:var(--blue);}
+  .midea-box{background:var(--lblue);border:1px solid #b8d4eb;border-radius:6px;padding:12px 16px;margin-bottom:14px;font-weight:600;color:var(--navy);}
+  .support-item{display:flex;align-items:flex-start;gap:10px;padding:9px 14px;margin-bottom:8px;border:1px solid var(--border);border-radius:6px;cursor:pointer;transition:all .15s;background:white;}
+  .support-item:hover{border-color:var(--blue);background:var(--light);}
+  .support-item.selected{border-color:#4C8C4A;background:#E2EFDA;}
+  .support-check{min-width:20px;height:20px;border:2px solid var(--blue);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:12px;color:white;}
+  .support-item.selected .support-check{background:#4C8C4A;border-color:#4C8C4A;}
+  .disc-item{margin-bottom:16px;}
+  .disc-item .disc-num{color:var(--orange);font-weight:700;}
+  .disc-item p{margin-bottom:6px;line-height:1.6;}
+  .disc-item textarea{width:100%;min-height:65px;padding:8px 10px;border:1px solid var(--border);border-radius:4px;font-family:inherit;font-size:13px;resize:vertical;}
+  .disc-item textarea:focus{outline:none;border-color:var(--blue);}
+</style>
+</head>
+<body>
+<header>
+  <h1>🎧 LISTENING PRACTICE — Advanced Level</h1>
+  <p>Units 19 – 21 &nbsp;|&nbsp; The War That Both Sides Won &nbsp;•&nbsp; Hernias Repaired Here! &nbsp;•&nbsp; Anastasia and the Russian Revolution</p>
+</header>
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="showUnit(19)">Unit 19 — The War That Both Sides Won</button>
+  <button class="tab-btn" onclick="showUnit(20)">Unit 20 — Hernias Repaired Here!</button>
+  <button class="tab-btn" onclick="showUnit(21)">Unit 21 — Anastasia and the Russian Revolution</button>
+</div>
+
+<!-- ══════════ UNIT 19 ══════════ -->
+<div id="unit-19" class="unit-panel active">
+  <div class="unit-banner">UNIT 19 — THE WAR THAT BOTH SIDES WON</div>
+
+  <div class="section">
+    <div class="section-bar"><span class="section-icon">🎧</span><span class="section-title">A | PRE-LISTENING</span></div>
+    <div class="instruction">Think about the following questions before you listen. Share your ideas with a partner.</div>
+    <div class="pre-q"><label>1. What do you already know about the history between Canada and the United States?</label><textarea placeholder="Write your ideas here..."></textarea></div>
+    <div class="pre-q"><label>2. Why might two countries fight a war and then both claim victory?</label><textarea placeholder="Write your ideas here..."></textarea></div>
+  </div>
+  <div class="section">
+    <div class="section-bar"><span class="section-icon">📖</span><span class="section-title">B | VOCABULARY PREVIEW — Contextual Definition</span></div>
+    <div class="instruction">Each sentence below is taken from the audio. The key word is underlined. Select the option that best matches its meaning in context.</div>
+    <div class="vocab-item">
+      <span class="num">1.</span><div class="sentence">The 3000 mile <span class="keyword">boundary</span> between Canada and the United States is known as "the longest undefended boundary in the world."</div>
+      <div class="options">
+        <button class="opt-btn" onclick="selectOpt(this)">A. a type of military fortress</button>
+        <button class="opt-btn" onclick="selectOpt(this)">B. a trade agreement between nations</button>
+        <button class="opt-btn" onclick="selectOpt(this)">C. a line that marks the limits of a territory</button>
+      </div>
+    </div>
+    <div class="vocab-item">
+      <span class="num">2.</span><div class="sentence">For three years in a row, U.S. armies <span class="keyword">invaded</span> Canada.</div>
+      <div class="options">
+        <button class="opt-btn" onclick="selectOpt(this)">A. entered a country with an army in order to take control</button>
+        <button class="opt-btn" onclick="selectOpt(this)">B. visited a country as official guests</button>
+        <button class="opt-btn" onclick="selectOpt(this)">C. defended a country against attack</button>
+      </div>
+    </div>
+    <div class="vocab-item">
+      <span class="num">3.</span><div class="sentence">The United States had <span class="keyword">proclaimed</span> their independence from Britain in 1776.</div>
+      <div class="options">
+        <button class="opt-btn" onclick="selectOpt(this)">A. secretly denied</button>
+        <button class="opt-btn" onclick="selectOpt(this)">B. announced publicly and officially</button>
+        <button class="opt-btn" onclick="selectOpt(this)">C. gave up voluntarily</button>
+      </div>
+    </div>
+    <div class="vocab-item">
+      <span class="num">4.</span><div class="sentence">British sailors went aboard American ships looking for <span class="keyword">deserters</span> from the British Navy.</div>
+      <div class="options">
+        <button class="opt-btn" onclick="selectOpt(this)">A. people who leave the armed forces without permission</button>
+        <button class="opt-btn" onclick="selectOpt(this)">B. officers promoted for bravery</button>
+        <button class="opt-btn" onclick="selectOpt(this)">C. foreign merchants selling goods</button>
+      </div>
+    </div>
+    <div class="vocab-item">
+      <span class="num">5.</span><div class="sentence">Since Americans <span class="keyword">outnumbered</span> Canadians ten to one, the U.S. government thought no one in Canada would dare oppose them.</div>
+      <div class="options">
+        <button class="opt-btn" onclick="selectOpt(this)">A. were less educated than</button>
+        <button class="opt-btn" onclick="selectOpt(this)">B. were greater in number than</button>
+        <button class="opt-btn" onclick="selectOpt(this)">C. lived farther away than</button>
+      </div>
+    </div>
+    <div class="vocab-item">
+      <span class="num">6.</span><div class="sentence">The U.S. government thought that no one in Canada would dare <span class="keyword">oppose</span> them.</div>
+      <div class="options">
+        <button class="opt-btn" onclick="selectOpt(this)">A. help or support</button>
+        <button class="opt-btn" onclick="selectOpt(this)">B. ignore completely</button>
+        <button class="opt-btn" onclick="selectOpt(this)">C. resist or act against</button>
+      </div>
+    </div>
+    <div class="vocab-item">
+      <span class="num">7.</span><div class="sentence">Brock found a valuable <span class="keyword">ally</span> in the American Indian Chief Tecumseh.</div>
+      <div class="options">
+        <button class="opt-btn" onclick="selectOpt(this)">A. a person or group that supports another, especially in a conflict</button>
+        <button class="opt-btn" onclick="selectOpt(this)">B. a fierce enemy in battle</button>
+        <button class="opt-btn" onclick="selectOpt(this)">C. an official who collects taxes</button>
+      </div>
+    </div>
+    <div class="vocab-item">
+      <span class="num">8.</span><div class="sentence">Tecumseh had been trying to <span class="keyword">unite</span> the scattered groups of Indians to fight together against American expansion.</div>
+      <div class="options">
+        <button class="opt-btn" onclick="selectOpt(this)">A. divide into smaller groups</button>
+        <button class="opt-btn" onclick="selectOpt(this)">B. bring together so that they act as one</button>
+        <button class="opt-btn" onclick="selectOpt(this)">C. force to move away</button>
+      </div>
+    </div>
+    <div class="vocab-item">
+      <span class="num">9.</span><div class="sentence">A peace <span class="keyword">treaty</span> was signed on December 24, 1814.</div>
+      <div class="options">
+        <button class="opt-btn" onclick="selectOpt(this)">A. a surprise military attack</button>
+        <button class="opt-btn" onclick="selectOpt(this)">B. a public declaration of war</button>
+        <button class="opt-btn" onclick="selectOpt(this)">C. a formal written agreement between countries</button>
+      </div>
+    </div>
+    <div class="vocab-item">
+      <span class="num">10.</span><div class="sentence">This agreement <span class="keyword">restored</span> everything to the way it had been when the war began.</div>
+      <div class="options">
+        <button class="opt-btn" onclick="selectOpt(this)">A. completely destroyed</button>
+        <button class="opt-btn" onclick="selectOpt(this)">B. changed into something new</button>
+        <button class="opt-btn" onclick="selectOpt(this)">C. brought back to a former condition</button>
+      </div>
+    </div>
+  </div>
+  <div class="section">
+    <div class="section-bar"><span class="section-icon">▶</span><span class="section-title">C | FIRST LISTEN — Gist</span></div>
+    <div class="instruction">Play the audio ONCE. Do not take notes. Then select the statement that best describes the main idea.</div>
+    <div class="gist-q">What is this listening mainly about?</div>
+    <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">A)</span><span>A biography of General Isaac Brock's military career</span></div>
+    <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">B)</span><span>How a war between the U.S. and Britain/Canada ended with no clear winner, yet led both sides to choose lasting peace</span></div>
+    <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">C)</span><span>How Napoleon's defeat changed the balance of power in Europe</span></div>
+  </div>
+  <div class="section">
+    <div class="section-bar"><span class="section-icon">✔</span><span class="section-title">D | MULTIPLE CHOICE — Detail Questions</span></div>
+    <div class="instruction">Listen again. Choose the best answer to each question.</div>
+    <div class="mc-block">
+      <div class="mc-q"><span class="mc-num">1.</span>Why were some American sailors taken to work for the British?</div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">A)</span><span>They had volunteered for higher pay</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">B)</span><span>They had deserted from the American navy</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">C)</span><span>They were captured during a sea battle</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">D)</span><span>They could not prove that they were American</span></div>
+    </div>
+    <div class="mc-block">
+      <div class="mc-q"><span class="mc-num">2.</span>Why did Americans think it would be easy to take over Canada?</div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">A)</span><span>Canadian leaders had offered to surrender</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">B)</span><span>They outnumbered Canadians ten to one, and Britain was busy fighting Napoleon</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">C)</span><span>Britain had withdrawn from North America</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">D)</span><span>American Indian tribes had promised to invade first</span></div>
+    </div>
+    <div class="mc-block">
+      <div class="mc-q"><span class="mc-num">3.</span>What advantage did Canada have in 1812?</div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">A)</span><span>Good leadership</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">B)</span><span>A much larger army</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">C)</span><span>Modern weapons supplied by France</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">D)</span><span>A powerful navy on the Great Lakes</span></div>
+    </div>
+    <div class="mc-block">
+      <div class="mc-q"><span class="mc-num">4.</span>What did the peace treaty of December 24, 1814 do?</div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">A)</span><span>It gave Canadian land to the United States</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">B)</span><span>It forced Britain to pay for the war</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">C)</span><span>It restored everything to the way it had been when the war began</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">D)</span><span>It made Canada an independent country</span></div>
+    </div>
+  </div>
+  <div class="section">
+    <div class="section-bar"><span class="section-icon">✏️</span><span class="section-title">E | SHORT-ANSWER — Detail Questions</span></div>
+    <div class="instruction">Answer each question in a few words, based on what you hear.</div>
+    <div class="sa-item"><div class="stem"><span class="mc-num">1.</span>On what date did the United States declare war on Great Britain?</div><input type="text" placeholder="Type your answer..."></div>
+    <div class="sa-item"><div class="stem"><span class="mc-num">2.</span>Which American Indian chief became an ally of General Brock?</div><input type="text" placeholder="Type your answer..."></div>
+    <div class="sa-item"><div class="stem"><span class="mc-num">3.</span>The British burned the government buildings in which city?</div><input type="text" placeholder="Type your answer..."></div>
+  </div>
+  <div class="section">
+    <div class="section-bar"><span class="section-icon">🔎</span><span class="section-title">F | INFERENCE QUESTIONS</span></div>
+    <div class="instruction">These answers are not stated directly. Use what you heard to reason out a likely answer.</div>
+    <div class="inf-item"><div class="stem"><span class="mc-num">1.</span>Why might both sides claim victory even though, in reality, no one had won the war?</div><textarea placeholder="Your answer..."></textarea></div>
+    <div class="inf-item"><div class="stem"><span class="mc-num">2.</span>What can you infer about why the border today is called "the longest undefended boundary in the world"?</div><textarea placeholder="Your answer..."></textarea></div>
+  </div>
+  <div class="section">
+    <div class="section-bar"><span class="section-icon">🧩</span><span class="section-title">G | MAIN IDEA vs. SUPPORTING DETAILS</span></div>
+    <div class="instruction">Below is the main idea of the listening. Click on every statement that is a supporting detail for it (some statements are true but do not support this particular main idea).</div>
+    <div class="midea-box">Main idea: Although the War of 1812 produced no clear winner, both sides claimed success, and its biggest result was a lasting decision never to fight each other again.</div>
+    <div class="support-item" onclick="toggleSupport(this)"><span class="support-check">✓</span><span>Both sides failed to win a clear victory, and the growing costs of the war made peace the best policy.</span></div>
+    <div class="support-item" onclick="toggleSupport(this)"><span class="support-check">✓</span><span>The peace treaty restored everything to the way it had been when the war began.</span></div>
+    <div class="support-item" onclick="toggleSupport(this)"><span class="support-check">✓</span><span>British sailors went aboard American ships looking for deserters from the British Navy.</span></div>
+    <div class="support-item" onclick="toggleSupport(this)"><span class="support-check">✓</span><span>Americans felt their independence was recognized, while Canadians felt they had shown they wanted to develop separately.</span></div>
+  </div>
+  <div class="section">
+    <div class="section-bar"><span class="section-icon">💬</span><span class="section-title">H | POST-LISTENING DISCUSSION</span></div>
+    <div class="instruction">Discuss with a partner or group. You may also write your thoughts below.</div>
+    <div class="disc-item"><p><span class="disc-num">1.</span> Both countries claimed victory after the war. Can a war really have two winners? Why do leaders often describe uncertain outcomes as victories?</p><textarea placeholder="Your thoughts..."></textarea></div>
+    <div class="disc-item"><p><span class="disc-num">2.</span> The U.S. and Canada share the "longest undefended boundary in the world." What conditions make peaceful borders possible between neighbors?</p><textarea placeholder="Your thoughts..."></textarea></div>
+    <div class="disc-item"><p><span class="disc-num">3.</span> Brock and Tecumseh were both killed, yet their example kept inspiring the defenders of Canada. How can leaders continue to influence people after they are gone?</p><textarea placeholder="Your thoughts..."></textarea></div>
+  </div>
+</div>
+
+<!-- ══════════ UNIT 20 ══════════ -->
+<div id="unit-20" class="unit-panel">
+  <div class="unit-banner">UNIT 20 — HERNIAS REPAIRED HERE!</div>
+
+  <div class="section">
+    <div class="section-bar"><span class="section-icon">🎧</span><span class="section-title">A | PRE-LISTENING</span></div>
+    <div class="instruction">Think about the following questions before you listen. Share your ideas with a partner.</div>
+    <div class="pre-q"><label>1. What are the possible advantages of a hospital that treats only one type of medical problem?</label><textarea placeholder="Write your ideas here..."></textarea></div>
+    <div class="pre-q"><label>2. What features would make a hospital feel less stressful for patients who are recovering from surgery?</label><textarea placeholder="Write your ideas here..."></textarea></div>
+  </div>
+  <div class="section">
+    <div class="section-bar"><span class="section-icon">📖</span><span class="section-title">B | VOCABULARY PREVIEW — Contextual Definition</span></div>
+    <div class="instruction">Each sentence below is taken from the audio. The key word is underlined. Select the option that best matches its meaning in context.</div>
+    <div class="vocab-item">
+      <span class="num">1.</span><div class="sentence">A hernia occurs when there is a tear or weakness in the muscle layers of the <span class="keyword">abdomen</span>.</div>
+      <div class="options">
+        <button class="opt-btn" onclick="selectOpt(this)">A. the part of the body that contains the stomach and intestines</button>
+        <button class="opt-btn" onclick="selectOpt(this)">B. the bones of the lower leg</button>
+        <button class="opt-btn" onclick="selectOpt(this)">C. the upper part of the chest</button>
+      </div>
+    </div>
+    <div class="vocab-item">
+      <span class="num">2.</span><div class="sentence">In a few cases, the muscle layers may clamp down on the <span class="keyword">protruding</span> intestine.</div>
+      <div class="options">
+        <button class="opt-btn" onclick="selectOpt(this)">A. completely healthy</button>
+        <button class="opt-btn" onclick="selectOpt(this)">B. sticking out from its normal position</button>
+        <button class="opt-btn" onclick="selectOpt(this)">C. hidden deep inside the body</button>
+      </div>
+    </div>
+    <div class="vocab-item">
+      <span class="num">3.</span><div class="sentence">Usually the person feels some <span class="keyword">discomfort</span>, and may notice an egg-shaped swelling.</div>
+      <div class="options">
+        <button class="opt-btn" onclick="selectOpt(this)">A. a sense of great strength</button>
+        <button class="opt-btn" onclick="selectOpt(this)">B. a sudden loss of memory</button>
+        <button class="opt-btn" onclick="selectOpt(this)">C. a feeling of mild pain or unease</button>
+      </div>
+    </div>
+    <div class="vocab-item">
+      <span class="num">4.</span><div class="sentence">The person may notice an egg-shaped <span class="keyword">swelling</span>.</div>
+      <div class="options">
+        <button class="opt-btn" onclick="selectOpt(this)">A. a deep cut in the skin</button>
+        <button class="opt-btn" onclick="selectOpt(this)">B. a lump where part of the body has become larger</button>
+        <button class="opt-btn" onclick="selectOpt(this)">C. a patch of dry skin</button>
+      </div>
+    </div>
+    <div class="vocab-item">
+      <span class="num">5.</span><div class="sentence">The Shouldice Technique also had a much lower rate of <span class="keyword">complications</span> and failures.</div>
+      <div class="options">
+        <button class="opt-btn" onclick="selectOpt(this)">A. unexpected problems that arise during treatment</button>
+        <button class="opt-btn" onclick="selectOpt(this)">B. payments made to patients</button>
+        <button class="opt-btn" onclick="selectOpt(this)">C. official medical certificates</button>
+      </div>
+    </div>
+    <div class="vocab-item">
+      <span class="num">6.</span><div class="sentence">He operated on seventy of these young men, using a <span class="keyword">technique</span> of his own.</div>
+      <div class="options">
+        <button class="opt-btn" onclick="selectOpt(this)">A. a piece of medical equipment</button>
+        <button class="opt-btn" onclick="selectOpt(this)">B. a government permit</button>
+        <button class="opt-btn" onclick="selectOpt(this)">C. a particular method of doing something</button>
+      </div>
+    </div>
+    <div class="vocab-item">
+      <span class="num">7.</span><div class="sentence">This technique allowed the patients a quicker <span class="keyword">recovery</span> time than the usual method.</div>
+      <div class="options">
+        <button class="opt-btn" onclick="selectOpt(this)">A. the process of getting well again</button>
+        <button class="opt-btn" onclick="selectOpt(this)">B. the total cost of treatment</button>
+        <button class="opt-btn" onclick="selectOpt(this)">C. the length of a waiting list</button>
+      </div>
+    </div>
+    <div class="vocab-item">
+      <span class="num">8.</span><div class="sentence">Since all the surgeons are <span class="keyword">specialists</span>, their level of skill is very high.</div>
+      <div class="options">
+        <button class="opt-btn" onclick="selectOpt(this)">A. students who are just beginning to train</button>
+        <button class="opt-btn" onclick="selectOpt(this)">B. managers who run a hospital</button>
+        <button class="opt-btn" onclick="selectOpt(this)">C. experts who focus on one particular area</button>
+      </div>
+    </div>
+    <div class="vocab-item">
+      <span class="num">9.</span><div class="sentence">Shouldice remains the most famous hospital in the world <span class="keyword">devoted</span> entirely to the repair and treatment of hernias.</div>
+      <div class="options">
+        <button class="opt-btn" onclick="selectOpt(this)">A. located far away from</button>
+        <button class="opt-btn" onclick="selectOpt(this)">B. dedicated completely to one purpose</button>
+        <button class="opt-btn" onclick="selectOpt(this)">C. strongly opposed to</button>
+      </div>
+    </div>
+    <div class="vocab-item">
+      <span class="num">10.</span><div class="sentence">Many young men were declared <span class="keyword">unfit</span> for military service because they had hernias.</div>
+      <div class="options">
+        <button class="opt-btn" onclick="selectOpt(this)">A. not healthy or suitable enough for a role</button>
+        <button class="opt-btn" onclick="selectOpt(this)">B. too young to apply</button>
+        <button class="opt-btn" onclick="selectOpt(this)">C. too wealthy to serve</button>
+      </div>
+    </div>
+  </div>
+  <div class="section">
+    <div class="section-bar"><span class="section-icon">▶</span><span class="section-title">C | FIRST LISTEN — Gist</span></div>
+    <div class="instruction">Play the audio ONCE. Do not take notes. Then select the statement that best describes the main idea.</div>
+    <div class="gist-q">What is this listening mainly about?</div>
+    <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">A)</span><span>A guide to the causes and prevention of heart disease</span></div>
+    <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">B)</span><span>The history of hospital construction in Toronto</span></div>
+    <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">C)</span><span>How the Shouldice Hospital grew from a wartime solution into a world-famous hernia hospital with a comfortable, recovery-focused approach</span></div>
+  </div>
+  <div class="section">
+    <div class="section-bar"><span class="section-icon">✔</span><span class="section-title">D | MULTIPLE CHOICE — Detail Questions</span></div>
+    <div class="instruction">Listen again. Choose the best answer to each question.</div>
+    <div class="mc-block">
+      <div class="mc-q"><span class="mc-num">1.</span>Why did Dr. Shouldice develop his own technique?</div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">A)</span><span>He wanted to open a hotel for tourists</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">B)</span><span>The government ordered all doctors to use a new method</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">C)</span><span>During World War II, many young men were unfit for service because of hernias, and there were too few doctors and beds</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">D)</span><span>The usual method was too expensive for most patients</span></div>
+    </div>
+    <div class="mc-block">
+      <div class="mc-q"><span class="mc-num">2.</span>According to the passage, what can happen in a few cases of hernia?</div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">A)</span><span>The infection can spread to the brain</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">B)</span><span>The patient can permanently lose the ability to walk</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">C)</span><span>The heart can stop from too much exercise</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">D)</span><span>The muscle can clamp down on the intestine and cut off its oxygen supply, which can cause death</span></div>
+    </div>
+    <div class="mc-block">
+      <div class="mc-q"><span class="mc-num">3.</span>How is the Shouldice Hospital different from a regular hospital?</div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">A)</span><span>It is more like a hotel or residence, with gardens, nature paths, and recreation</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">B)</span><span>It has no surgeons on staff</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">C)</span><span>It keeps patients in bed for several weeks</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">D)</span><span>It is located inside a Toronto factory</span></div>
+    </div>
+    <div class="mc-block">
+      <div class="mc-q"><span class="mc-num">4.</span>What does the staff encourage patients to do after surgery?</div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">A)</span><span>Rest in bed for a full week</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">B)</span><span>Walk and exercise within four or five hours</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">C)</span><span>Avoid walking for two days</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">D)</span><span>Eat only liquid food for three days</span></div>
+    </div>
+  </div>
+  <div class="section">
+    <div class="section-bar"><span class="section-icon">✏️</span><span class="section-title">E | SHORT-ANSWER — Detail Questions</span></div>
+    <div class="instruction">Answer each question in a few words, based on what you hear.</div>
+    <div class="sa-item"><div class="stem"><span class="mc-num">1.</span>How many beds does the Shouldice Hospital now have?</div><input type="text" placeholder="Type your answer..."></div>
+    <div class="sa-item"><div class="stem"><span class="mc-num">2.</span>On average, how many hernia operations are performed there each day?</div><input type="text" placeholder="Type your answer..."></div>
+    <div class="sa-item"><div class="stem"><span class="mc-num">3.</span>What is the worldwide failure rate for hernia operations, compared with Shouldice's rate of less than 1%?</div><input type="text" placeholder="Type your answer..."></div>
+  </div>
+  <div class="section">
+    <div class="section-bar"><span class="section-icon">🔎</span><span class="section-title">F | INFERENCE QUESTIONS</span></div>
+    <div class="instruction">These answers are not stated directly. Use what you heard to reason out a likely answer.</div>
+    <div class="inf-item"><div class="stem"><span class="mc-num">1.</span>Why might patients travel from many countries to a hospital north of Toronto?</div><textarea placeholder="Your answer..."></textarea></div>
+    <div class="inf-item"><div class="stem"><span class="mc-num">2.</span>What can you infer about why the hospital has gardens, a piano, and a pool table instead of a typical hospital atmosphere?</div><textarea placeholder="Your answer..."></textarea></div>
+  </div>
+  <div class="section">
+    <div class="section-bar"><span class="section-icon">🧩</span><span class="section-title">G | MAIN IDEA vs. SUPPORTING DETAILS</span></div>
+    <div class="instruction">Below is the main idea of the listening. Click on every statement that is a supporting detail for it (some statements are true but do not support this particular main idea).</div>
+    <div class="midea-box">Main idea: The Shouldice Hospital became world-famous by specializing entirely in hernia repair, combining expert surgeons, a faster-recovery technique, and a relaxing environment.</div>
+    <div class="support-item" onclick="toggleSupport(this)"><span class="support-check">✓</span><span>Hernias are more common in men than in women and are often related to lifting heavy materials.</span></div>
+    <div class="support-item" onclick="toggleSupport(this)"><span class="support-check">✓</span><span>Less than 1% of operations need to be corrected, compared with about 20% worldwide.</span></div>
+    <div class="support-item" onclick="toggleSupport(this)"><span class="support-check">✓</span><span>Patients are encouraged to walk within hours of surgery and usually recover quickly.</span></div>
+    <div class="support-item" onclick="toggleSupport(this)"><span class="support-check">✓</span><span>Patients come from many countries because satisfied customers are the hospital's best advertisement.</span></div>
+  </div>
+  <div class="section">
+    <div class="section-bar"><span class="section-icon">💬</span><span class="section-title">H | POST-LISTENING DISCUSSION</span></div>
+    <div class="instruction">Discuss with a partner or group. You may also write your thoughts below.</div>
+    <div class="disc-item"><p><span class="disc-num">1.</span> Dr. Shouldice solved a wartime shortage by inventing his own technique. How can shortages or crises lead to new ideas and inventions?</p><textarea placeholder="Your thoughts..."></textarea></div>
+    <div class="disc-item"><p><span class="disc-num">2.</span> The Shouldice Hospital looks more like a hotel than a regular hospital. How much does a person's surroundings affect how well they heal?</p><textarea placeholder="Your thoughts..."></textarea></div>
+    <div class="disc-item"><p><span class="disc-num">3.</span> The hospital does only one kind of treatment, and does it extremely well. Is it better for doctors and hospitals to specialize, or to treat many different problems? Why?</p><textarea placeholder="Your thoughts..."></textarea></div>
+  </div>
+</div>
+
+<!-- ══════════ UNIT 21 ══════════ -->
+<div id="unit-21" class="unit-panel">
+  <div class="unit-banner">UNIT 21 — ANASTASIA AND THE RUSSIAN REVOLUTION</div>
+
+  <div class="section">
+    <div class="section-bar"><span class="section-icon">🎧</span><span class="section-title">A | PRE-LISTENING</span></div>
+    <div class="instruction">Think about the following questions before you listen. Share your ideas with a partner.</div>
+    <div class="pre-q"><label>1. What do you already know about the last royal family of Russia or the Russian Revolution?</label><textarea placeholder="Write your ideas here..."></textarea></div>
+    <div class="pre-q"><label>2. Why might a mystery about a famous person's death continue for many years?</label><textarea placeholder="Write your ideas here..."></textarea></div>
+  </div>
+  <div class="section">
+    <div class="section-bar"><span class="section-icon">📖</span><span class="section-title">B | VOCABULARY PREVIEW — Contextual Definition</span></div>
+    <div class="instruction">Each sentence below is taken from the audio. The key word is underlined. Select the option that best matches its meaning in context.</div>
+    <div class="vocab-item">
+      <span class="num">1.</span><div class="sentence">The Russian Empire had one of the oldest <span class="keyword">monarchies</span> in Europe.</div>
+      <div class="options">
+        <button class="opt-btn" onclick="selectOpt(this)">A. countries governed by elected parliaments</button>
+        <button class="opt-btn" onclick="selectOpt(this)">B. countries ruled by a king, queen, or emperor</button>
+        <button class="opt-btn" onclick="selectOpt(this)">C. groups of farmers who rebel</button>
+      </div>
+    </div>
+    <div class="vocab-item">
+      <span class="num">2.</span><div class="sentence">Some of the most <span class="keyword">radical</span> changes occurred in the Russian Empire.</div>
+      <div class="options">
+        <button class="opt-btn" onclick="selectOpt(this)">A. very different from what was usual; extreme</button>
+        <button class="opt-btn" onclick="selectOpt(this)">B. slow and barely noticeable</button>
+        <button class="opt-btn" onclick="selectOpt(this)">C. temporary and easily undone</button>
+      </div>
+    </div>
+    <div class="vocab-item">
+      <span class="num">3.</span><div class="sentence">Since a girl could not <span class="keyword">inherit</span> the throne of Russia, it was important for Alexandra to give birth to a son.</div>
+      <div class="options">
+        <button class="opt-btn" onclick="selectOpt(this)">A. buy a title with money</button>
+        <button class="opt-btn" onclick="selectOpt(this)">B. refuse a royal duty</button>
+        <button class="opt-btn" onclick="selectOpt(this)">C. receive a title or position from a predecessor</button>
+      </div>
+    </div>
+    <div class="vocab-item">
+      <span class="num">4.</span><div class="sentence">Aleksei was soon found to have an <span class="keyword">incurable</span> disease.</div>
+      <div class="options">
+        <button class="opt-btn" onclick="selectOpt(this)">A. easy to treat</button>
+        <button class="opt-btn" onclick="selectOpt(this)">B. impossible to cure</button>
+        <button class="opt-btn" onclick="selectOpt(this)">C. caused by a poor diet</button>
+      </div>
+    </div>
+    <div class="vocab-item">
+      <span class="num">5.</span><div class="sentence">This caused <span class="keyword">anxiety</span> for all the family, especially his mother and father.</div>
+      <div class="options">
+        <button class="opt-btn" onclick="selectOpt(this)">A. a sense of pride</button>
+        <button class="opt-btn" onclick="selectOpt(this)">B. a large amount of wealth</button>
+        <button class="opt-btn" onclick="selectOpt(this)">C. a feeling of worry or fear</button>
+      </div>
+    </div>
+    <div class="vocab-item">
+      <span class="num">6.</span><div class="sentence">The girls led a fairly <span class="keyword">carefree</span> existence.</div>
+      <div class="options">
+        <button class="opt-btn" onclick="selectOpt(this)">A. free from worry and responsibility</button>
+        <button class="opt-btn" onclick="selectOpt(this)">B. filled with hard physical labor</button>
+        <button class="opt-btn" onclick="selectOpt(this)">C. strictly controlled and punished</button>
+      </div>
+    </div>
+    <div class="vocab-item">
+      <span class="num">7.</span><div class="sentence">The most <span class="keyword">elaborate</span> parties were grand balls, where everyone dressed in their finest clothes.</div>
+      <div class="options">
+        <button class="opt-btn" onclick="selectOpt(this)">A. small and informal</button>
+        <button class="opt-btn" onclick="selectOpt(this)">B. quiet and secret</button>
+        <button class="opt-btn" onclick="selectOpt(this)">C. detailed, carefully planned and impressive</button>
+      </div>
+    </div>
+    <div class="vocab-item">
+      <span class="num">8.</span><div class="sentence">The majority of the population was poor <span class="keyword">peasant</span> farmers.</div>
+      <div class="options">
+        <button class="opt-btn" onclick="selectOpt(this)">A. a wealthy landowner</button>
+        <button class="opt-btn" onclick="selectOpt(this)">B. a poor person who works on the land</button>
+        <button class="opt-btn" onclick="selectOpt(this)">C. a soldier in the royal guard</button>
+      </div>
+    </div>
+    <div class="vocab-item">
+      <span class="num">9.</span><div class="sentence">In March 1917, there was a popular revolution, and the Tsar was <span class="keyword">deposed</span>.</div>
+      <div class="options">
+        <button class="opt-btn" onclick="selectOpt(this)">A. removed from power</button>
+        <button class="opt-btn" onclick="selectOpt(this)">B. crowned as a ruler</button>
+        <button class="opt-btn" onclick="selectOpt(this)">C. elected by the people</button>
+      </div>
+    </div>
+    <div class="vocab-item">
+      <span class="num">10.</span><div class="sentence">To some, this news was too <span class="keyword">dreadful</span> to be believed.</div>
+      <div class="options">
+        <button class="opt-btn" onclick="selectOpt(this)">A. wonderfully exciting</button>
+        <button class="opt-btn" onclick="selectOpt(this)">B. extremely bad or shocking</button>
+        <button class="opt-btn" onclick="selectOpt(this)">C. mildly disappointing</button>
+      </div>
+    </div>
+  </div>
+  <div class="section">
+    <div class="section-bar"><span class="section-icon">▶</span><span class="section-title">C | FIRST LISTEN — Gist</span></div>
+    <div class="instruction">Play the audio ONCE. Do not take notes. Then select the statement that best describes the main idea.</div>
+    <div class="gist-q">What is this listening mainly about?</div>
+    <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">A)</span><span>The story of Russia's last royal family: their lives, the revolution that ended the monarchy, their deaths, and a famous mystery that was finally solved</span></div>
+    <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">B)</span><span>A history of the Russian Empire's military conquests</span></div>
+    <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">C)</span><span>A biography of Vladimir Lenin's early political career</span></div>
+  </div>
+  <div class="section">
+    <div class="section-bar"><span class="section-icon">✔</span><span class="section-title">D | MULTIPLE CHOICE — Detail Questions</span></div>
+    <div class="instruction">Listen again. Choose the best answer to each question.</div>
+    <div class="mc-block">
+      <div class="mc-q"><span class="mc-num">1.</span>Why was it important for Alexandra to give birth to a son?</div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">A)</span><span>Sons were required to command the army</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">B)</span><span>The Tsar had promised the people a son</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">C)</span><span>Daughters had to marry foreign princes</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">D)</span><span>A girl could not inherit the throne of Russia</span></div>
+    </div>
+    <div class="mc-block">
+      <div class="mc-q"><span class="mc-num">2.</span>What was Aleksei's illness, and how did it affect him?</div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">A)</span><span>A heart disease that kept him from walking</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">B)</span><span>A fever that returned every winter</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">C)</span><span>Hemophilia, which caused uncontrollable bleeding and left him very weak</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">D)</span><span>A lung disease that required mountain air</span></div>
+    </div>
+    <div class="mc-block">
+      <div class="mc-q"><span class="mc-num">3.</span>Why did the Tsar give up some of his power in 1905?</div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">A)</span><span>He decided to retire voluntarily</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">B)</span><span>Popular opposition forced him to accept an elected parliament</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">C)</span><span>Germany demanded it after the war began</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">D)</span><span>His son's illness made him unable to rule</span></div>
+    </div>
+    <div class="mc-block">
+      <div class="mc-q"><span class="mc-num">4.</span>How was it finally proven that Anna Anderson was not Anastasia?</div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">A)</span><span>After the fall of the Soviet Union, investigators could look into the murder and found the bodies of Anastasia and Aleksei</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">B)</span><span>Anna Anderson confessed in a letter</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">C)</span><span>Her photographs were compared with Anastasia's</span></div>
+      <div class="mc-option" onclick="selectMC(this)"><span class="mc-letter">D)</span><span>Surviving royal relatives refused to meet her</span></div>
+    </div>
+  </div>
+  <div class="section">
+    <div class="section-bar"><span class="section-icon">✏️</span><span class="section-title">E | SHORT-ANSWER — Detail Questions</span></div>
+    <div class="instruction">Answer each question in a few words, based on what you hear.</div>
+    <div class="sa-item"><div class="stem"><span class="mc-num">1.</span>What were the names of the Tsar's four daughters?</div><input type="text" placeholder="Type your answer..."></div>
+    <div class="sa-item"><div class="stem"><span class="mc-num">2.</span>Which two hobbies did Anastasia enjoy?</div><input type="text" placeholder="Type your answer..."></div>
+    <div class="sa-item"><div class="stem"><span class="mc-num">3.</span>In which city was the royal family shot in June 1918?</div><input type="text" placeholder="Type your answer..."></div>
+  </div>
+  <div class="section">
+    <div class="section-bar"><span class="section-icon">🔎</span><span class="section-title">F | INFERENCE QUESTIONS</span></div>
+    <div class="instruction">These answers are not stated directly. Use what you heard to reason out a likely answer.</div>
+    <div class="inf-item"><div class="stem"><span class="mc-num">1.</span>Why might some people have been willing to believe Anna Anderson's claim to be Anastasia?</div><textarea placeholder="Your answer..."></textarea></div>
+    <div class="inf-item"><div class="stem"><span class="mc-num">2.</span>What can you infer about why the Tsar's absolute rule was not popular with the majority of people?</div><textarea placeholder="Your answer..."></textarea></div>
+  </div>
+  <div class="section">
+    <div class="section-bar"><span class="section-icon">🧩</span><span class="section-title">G | MAIN IDEA vs. SUPPORTING DETAILS</span></div>
+    <div class="instruction">Below is the main idea of the listening. Click on every statement that is a supporting detail for it (some statements are true but do not support this particular main idea).</div>
+    <div class="midea-box">Main idea: The fall of Russia's last royal family, from a privileged life to their deaths during the revolution, ended in a famous mystery that was finally solved.</div>
+    <div class="support-item" onclick="toggleSupport(this)"><span class="support-check">✓</span><span>Anastasia and her sisters lived a carefree life in palaces with servants, attending grand balls.</span></div>
+    <div class="support-item" onclick="toggleSupport(this)"><span class="support-check">✓</span><span>Most Russians were poor peasants and workers, and popular opposition grew until the Tsar was deposed in 1917.</span></div>
+    <div class="support-item" onclick="toggleSupport(this)"><span class="support-check">✓</span><span>After the Soviet Union fell, investigators found the bodies and proved that Anna Anderson was not Anastasia.</span></div>
+    <div class="support-item" onclick="toggleSupport(this)"><span class="support-check">✓</span><span>Anastasia was the clown of the family and did not like schoolwork.</span></div>
+  </div>
+  <div class="section">
+    <div class="section-bar"><span class="section-icon">💬</span><span class="section-title">H | POST-LISTENING DISCUSSION</span></div>
+    <div class="instruction">Discuss with a partner or group. You may also write your thoughts below.</div>
+    <div class="disc-item"><p><span class="disc-num">1.</span> Anna Anderson claimed to be Anastasia, and some people believed her. Why do people sometimes want to believe a hopeful story even when the evidence is weak?</p><textarea placeholder="Your thoughts..."></textarea></div>
+    <div class="disc-item"><p><span class="disc-num">2.</span> The royal family lived in luxury while most peasants could barely stay alive. How does inequality contribute to revolutions?</p><textarea placeholder="Your thoughts..."></textarea></div>
+    <div class="disc-item"><p><span class="disc-num">3.</span> The Tsar's daughters took no part in ruling, yet they shared his fate. Should family members be held responsible for a ruler's actions? Why or why not?</p><textarea placeholder="Your thoughts..."></textarea></div>
+  </div>
+</div>
+
+<script>
+function showUnit(num){
+  document.querySelectorAll('.unit-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('unit-'+num).classList.add('active');
+  document.querySelectorAll('.tab-btn')[num-19].classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function selectOpt(btn){
+  btn.closest('.options').querySelectorAll('.opt-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+}
+function selectMC(el){
+  const scope = el.closest('.mc-block') || el.closest('.section');
+  scope.querySelectorAll('.mc-option').forEach(o=>o.classList.remove('selected'));
+  el.classList.add('selected');
+}
+function toggleSupport(el){ el.classList.toggle('selected'); }
+</script>
+</body>
+</html>
